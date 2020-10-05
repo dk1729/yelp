@@ -1,0 +1,91 @@
+.page-header{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.l1{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.l2{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  border-color: #eeeeef;
+}
+
+.l3{
+  color: #333;
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  border-bottom: 1px solid #eeeeef;
+  border-color: #eeeeef;
+  background-color: #fff;
+  padding: 24px 40px 0;
+  pointer-events: auto;
+}
+
+.l4{
+  color: #333;
+  pointer-events: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  border-color: #eeeeef;
+  background-color: #fff;
+  min-width: 960px;
+}
+
+.l5{
+  color: #333;
+  pointer-events: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  border-color: #eeeeef;
+  display: table;
+  min-width: 100%;
+  table-layout: auto;
+}
+
+.l6{
+  color: #333;
+  pointer-events: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  border-color: #eeeeef;
+  box-sizing: border-box;
+  display: table-cell;
+  vertical-align: middle;
+} /*use it twice*/
+
+
+
+

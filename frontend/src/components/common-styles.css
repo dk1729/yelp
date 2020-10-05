@@ -1,0 +1,283 @@
+.wrap{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.main-content-wrap{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  min-width: 1020px;
+  background: white;
+}
+
+.super-container{
+  color: #333;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  width: 960px;
+  margin: 0 auto;
+  padding: 0 15px;
+  padding-top: 15px;
+  padding-bottom: 36px;
+  min-height: 720px;
+}
+
+.hidden{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  display: none;
+}
+
+.signup-frame{
+  color: #333;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin: 0 -15px;
+}
+
+.col2{
+  color: #333;
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  float: left;
+  padding: 0 15px;
+  min-height: 1px;
+  box-sizing: border-box;
+  width: 50%;
+}
+
+.pic-container{
+  color: #333;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin-top: 117px;
+  padding-bottom: 12px;
+  text-align: center;
+}
+
+.col1{
+  color: #333;
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  padding: 30px;
+  overflow: hidden;
+}
+
+.col0{
+  color: #333;
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  float: left;
+  padding: 0 15px;
+  min-height: 1px;
+  box-sizing: border-box;
+  width: 50%;
+}
+
+.sl2{
+  color: #333;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin: auto;
+  padding: 0 18px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.sl3{
+  color: #333;
+  text-align: center;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  max-width: 300px;
+  margin: auto;
+}
+
+.sl4{
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.signup-header{
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin-bottom: 30px;
+}
+
+.subheading{
+  color: #333;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.social_button{
+  font: inherit;
+  overflow: visible;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  user-select: none;
+  border-radius: 3px;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;   
+  background-image: none;
+  background-repeat: no-repeat;
+  transition: all 0.6s;
+  transition-property: background-color, background-position, background-size, border-color;
+  background-position: 50% 50%;
+  background-size: 15000px 15000px;
+  padding: 10px 13px !important;
+  font-size: 16px;
+  line-height: 1.3125em;
+}
+
+.fb{
+  color: #fff;
+  background: #1877f2;
+  border: 1px solid #1877f2;
+}
+.goog{
+  color: #666;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+.apple{
+  color: #fff;
+  background: #000;
+  border: 1px solid #000;      
+}
+
+.button_centered_text{
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  text-align: center !important;
+}
+
+.legend_style{
+  text-align: center;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  font-size: 1em;
+  padding: 0 15px;
+  margin: 0 auto;
+  color: #666;
+}
+
+.form-container{
+  color: #333;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin: 0;
+  text-align: left;
+}
+
+.form-elems{
+  color: #333;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+.name-inputs{
+  color: #333;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+  list-style: none;
+  margin: -3px;
+  display: block;
+  font-size: 0;
+  line-height: 1;
+  text-align: left;
+}
+
+.name-placeholders{
+  list-style: none;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  margin: 0 0 6px;
+  display: none;
+  color: #999;
+  font-weight: normal;
+}
