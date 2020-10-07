@@ -100,8 +100,7 @@ export function fetchRestData(rest_id) {
   }
 }
 
-export function fetchDishData(rest_id) {
-  
+export function fetchDishData(rest_id) {  
   return async (dispatch)=>{
     Axios.defaults.withCredentials = true;
     const response = await Axios.get("http://localhost:3001/getDishes/"+rest_id)
@@ -113,7 +112,6 @@ export function fetchDishData(rest_id) {
 }
 
 export function fetchRestaurants() {
-
   return async (dispatch)=>{
     Axios.defaults.withCredentials = true;
     const response = await Axios.get("http://localhost:3001/getRestaurants/")
@@ -131,6 +129,17 @@ export function fetchCart(user_id) {
     const response = await Axios.get("http://localhost:3001/getCart/"+user_id)
     dispatch({
       type:'FETCH_CART',
+      payload:response.data
+    })
+  }
+}
+
+export function fetchOrderData(id, type) {  
+  return async (dispatch) => {
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.get("http://localhost:3001/getOrders", {params:{id, type}})
+    dispatch({
+      type:'FETCH_ORDER_DATA',
       payload:response.data
     })
   }

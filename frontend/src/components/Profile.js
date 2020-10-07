@@ -77,57 +77,13 @@ class Profile extends Component {
                     <Nav.Link eventKey="disabled" disabled>
                       <h4>{this.props.formData.first_name}'s Profile</h4>
                     </Nav.Link>
-                  </Nav.Item>                  
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>                                        
-                    <FontAwesomeIcon icon={faUser} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" disabled style={{marginLeft:15}}>Profile Overview</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faUserFriends} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>Friends</Nav.Link>
-                  </Nav.Item>
+                  </Nav.Item>                                    
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
                   <FontAwesomeIcon icon={faStar} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
                     <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
                     Reviews
                     </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faAward} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Compliments
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faLightbulb} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Tips
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faBookmark} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Bookmarks
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faBookmark} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Collections
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faCheckCircle} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Check-Ins
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faDollarSign} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Yelp Cash Back
-                    </Nav.Link>
-                  </Nav.Item>
+                  </Nav.Item>                                                                                                            
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
                   <FontAwesomeIcon icon={faCalendarWeek} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
                     <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
@@ -135,21 +91,11 @@ class Profile extends Component {
                     </Nav.Link>
                   </Nav.Item>
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faTag} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Order History
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faUser} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Following
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
-                  <FontAwesomeIcon icon={faUser} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Followers
+                  <FontAwesomeIcon icon={faTag} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>                    
+                    <Nav.Link eventKey="disabled" style={{marginLeft:15}}>
+                      <Link to="/orderHistory">
+                        Order History
+                      </Link>
                     </Nav.Link>
                   </Nav.Item>
                 </Nav>

@@ -11,6 +11,7 @@ import restAuth from './restAuthReducer';
 import fetchDishData from './fetchDishData';
 import fetchRestaurants from './fetchRestaurants';
 import fetchCart from './fetchCart';
+import fetchOrderData from './fetchOrderData';
 
 const rootReducer = combineReducers({
   form:reducer,
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
   restDetails:fetchRestData,
   dishes:fetchDishData,
   restaurants:fetchRestaurants,
-  cart:fetchCart  
+  cart:fetchCart,
+  orders:fetchOrderData
 })
 
 export default rootReducer;

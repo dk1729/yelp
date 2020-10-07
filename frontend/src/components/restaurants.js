@@ -47,7 +47,7 @@ class restaurants extends Component {
           }
       }
     }
-    if(temp!=="")
+    if(temp.length>0)
       formValues = {...newVal, hood:temp}
     else
       formValues = {...newVal, rest_id:window.localStorage.getItem('rest_id')}
@@ -78,8 +78,7 @@ class restaurants extends Component {
             this.forceUpdate();
         }).catch((err)=>{
           console.log("ERRR : ",err)
-        });
-        
+        });        
   }
 
   render() {

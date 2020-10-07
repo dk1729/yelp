@@ -39,7 +39,7 @@ class RestProfile extends Component {
     return (
       <div>
         {redirectVar}
-        <InternalRestHeader/>                
+        <InternalRestHeader/>        
         <div style={{marginTop:10, border:"1px solid #f5f5f5", background:"#f5f5f5",width:"100%",height:"200px"}}>
           <Row>
             <Col>
@@ -97,7 +97,7 @@ class RestProfile extends Component {
                   </Nav.Item>                  
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>                                        
                     <FontAwesomeIcon icon={faUser} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" disabled style={{marginLeft:15}}>Current Orders</Nav.Link>
+                    <Nav.Link eventKey="disabled" style={{marginLeft:15}}><Link to="/rest_orders">Current Orders</Link></Nav.Link>
                   </Nav.Item>
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
                   <FontAwesomeIcon icon={faStar} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>

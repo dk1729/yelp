@@ -57,6 +57,7 @@ class cart extends Component {
             console.log(response)            
             if(response.status === 200){
               console.log("Order placed")
+              this.forceUpdate();
             } 
         }).catch(()=>{
           console.log("ERRR")

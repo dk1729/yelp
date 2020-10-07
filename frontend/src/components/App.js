@@ -16,6 +16,9 @@ import updateDish from './updateDish';
 import restaurants from './restaurants';
 import biz from './biz';
 import cart from './cart';
+import viewRestOrders from './viewRestOrders';
+import OrderHistory from './OrderHistory';
+import ExternalUserProfile from './ExternalUserProfile';
 
 class App extends React.Component{
   render(){
@@ -36,6 +39,9 @@ class App extends React.Component{
           <Route path="/restaurants" component={restaurants}/>
           <Route path="/biz" component={biz}/>
           <Route path="/cart" component={cart}/>
+          <Route path="/rest_orders" component={viewRestOrders}/>
+          <Route path="/orderHistory" component={OrderHistory}/>
+          <Route path="/extUserProfile" component={ExternalUserProfile}/>
         </div>
       </BrowserRouter>
     );
