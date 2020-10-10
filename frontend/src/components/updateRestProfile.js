@@ -25,14 +25,34 @@ class updateRestProfile extends Component {
     console.log("Old formvalues = "+JSON.stringify(formValues))
     formValues = {...formValues, rest_id:window.localStorage.getItem('rest_id')}
     console.log("New formvalues = "+JSON.stringify(formValues))    
-    axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3001/updateRest',formValues)
-        .then(response => {
-            console.log("Status Code : ",response.status);                              
 
-        }).catch((err)=>{
-          console.log("ERRR : ",err)
-        });
+    if(formValues.address){
+      axios.defaults.withCredentials = false;
+      axios.get("https://maps.googleapis.com/maps/api/geocode/json?address="+ formValues.address +"&key=AIzaSyB5f3E2sHlB_ppiVsOTX1oVaSsI9WJktss").then(response => {                    
+        console.log(response.data.results[0].geometry.location)
+        console.log({...formValues, latitude:response.data.results[0].geometry.location.lat, longitude:response.data.results[0].geometry.location.lng})
+        axios.defaults.withCredentials = true;
+        axios.post('http://localhost:3001/updateRest',{...formValues, latitude:response.data.results[0].geometry.location.lat, longitude:response.data.results[0].geometry.location.lng})
+            .then(response => {
+                console.log("Status Code : ",response.status);                              
+
+            }).catch((err)=>{
+              console.log("ERRR : ",err)
+            });
+      })
+    }
+    else{
+      axios.defaults.withCredentials = true;
+      axios.post('http://localhost:3001/updateRest',formValues)
+          .then(response => {
+              console.log("Status Code : ",response.status);                              
+
+          }).catch((err)=>{
+            console.log("ERRR : ",err)
+          });
+    }    
+
+    
   }
   render() {
     console.log("Props of restDetails = "+JSON.stringify(this.props.restDetails))
@@ -100,7 +120,7 @@ class updateRestProfile extends Component {
                 <Field placeholder={this.props.restDetails.takeout} name="takeout" component={this.renderInput} label="takeout" type="text"/>
                 <Field placeholder={this.props.restDetails.delivery} name="delivery" component={this.renderInput} label="delivery" type="text"/>
                 <Field placeholder={this.props.restDetails.dineout} name="dineout" component={this.renderInput} label="dineout" type="text"/>                                
-                <Field placeholder={this.props.restDetails.description} name="description" component={this.renderInput} label="Description" type="text"/>                
+                <Field placeholder={this.props.restDetails.description} name="description" component={this.renderInput} label="Description" type="text"/>
                 <button className="ui button primary">Submit</button>
               </form>
               </Col>          

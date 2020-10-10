@@ -41,7 +41,7 @@ class RestLogin extends React.Component{
     let redirectVar = null;
     {console.log(window.localStorage.getItem('isRestSignedIn'))}
     if(window.localStorage.getItem('isRestSignedIn')){
-        redirectVar = <Redirect to="/restprofile" />
+      redirectVar = <Redirect to="/restprofile" />
     }
     return (
       <div className="wrap">

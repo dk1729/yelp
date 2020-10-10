@@ -34,7 +34,6 @@ class Signup extends React.Component{
     );
   }
 
-
   onSubmit = formValues => {
     console.log(formValues)    
 
@@ -103,6 +102,7 @@ class Signup extends React.Component{
                         </div>
                         <br/>
                         <legend align="center" className="legend_style">OR</legend>
+                        <br/>
                       </div>
                       <form className="ui form" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                         <div className="form-elems">
@@ -111,25 +111,8 @@ class Signup extends React.Component{
                           <Field name="email" component={this.renderInput} label="Email" type="email"/>
                           <Field name="password" component={this.renderInput} label="Password" type="password"/>
                           <Field name="zip" component={this.renderInput} label="ZIP Code" type="number"/>
-                          <Field name="month" component="select">
-                            <option>Enter a month</option>
-                            {
-                              options_months
-                            }
-                          </Field>
-                          <Field name="day" component="select">
-                            <option>Enter a day</option>
-                            {
-                              options_days
-                            }
-                          </Field>
-                          <Field name="year" component="select">
-                            <option>Enter a year</option>
-                            {
-                              options_years
-                            }
-                          </Field>
-                          <button className="ui button primary">Submit</button>
+                          <Field name="birthdate" component={this.renderInput} label="Birth Date" type="date"/>
+                          <button style={{marginTop:10, marginRight:10, backgroundColor:"#d32323"}} className="ui button primary">Submit</button>
                           <Link to="/login/">Log in</Link>
                         </div>
                       </form>

@@ -12,6 +12,13 @@ import fetchDishData from './fetchDishData';
 import fetchRestaurants from './fetchRestaurants';
 import fetchCart from './fetchCart';
 import fetchOrderData from './fetchOrderData';
+import fetchReviews from './fetchReviews';
+import fetchEvents from './fetchEvents';
+import fetchRegisteredEvents from './fetchRegisteredEvents';
+import fetchRestEvents from './fetchRestEvents';
+import fetchRestCoords from './fetchRestCoords';
+import setSearchTerms from './setSearchTerms';
+import filtered_restaurants from './applyFilters';
 
 const rootReducer = combineReducers({
   form:reducer,
@@ -26,7 +33,14 @@ const rootReducer = combineReducers({
   dishes:fetchDishData,
   restaurants:fetchRestaurants,
   cart:fetchCart,
-  orders:fetchOrderData
+  orders:fetchOrderData,
+  reviews:fetchReviews,
+  events:fetchEvents,
+  registeredEvents:fetchRegisteredEvents,
+  restEvents:fetchRestEvents,
+  restCoords:fetchRestCoords,
+  searchTerms:setSearchTerms,
+  filtered_restaurants
 })
 
 export default rootReducer;

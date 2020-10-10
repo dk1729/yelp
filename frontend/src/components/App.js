@@ -19,6 +19,10 @@ import cart from './cart';
 import viewRestOrders from './viewRestOrders';
 import OrderHistory from './OrderHistory';
 import ExternalUserProfile from './ExternalUserProfile';
+import ShowReviews from './ShowReviews';
+import ShowPastReviews from './ShowPastReviews';
+import RestEvents from './RestEvents';
+import ShowEvents from './ShowEvents';
 
 class App extends React.Component{
   render(){
@@ -42,6 +46,10 @@ class App extends React.Component{
           <Route path="/rest_orders" component={viewRestOrders}/>
           <Route path="/orderHistory" component={OrderHistory}/>
           <Route path="/extUserProfile" component={ExternalUserProfile}/>
+          <Route path="/showReviews" component={ShowReviews}/>
+          <Route path="/showPastReviews" component={ShowPastReviews}/>
+          <Route path="/restEvents" component={RestEvents}/>
+          <Route path="/showEvents" component={ShowEvents}/>
         </div>
       </BrowserRouter>
     );

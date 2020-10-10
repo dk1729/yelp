@@ -67,8 +67,7 @@ app.post("/upload",(req,res) => {
   upload(req,res,err=>{
     console.log("Body : ",req.body)
     console.log("File: ",req.file)
-    
-        
+          
     let sql = "UPDATE `yelp`.`user_details` SET `path` = "+mysql.escape(req.file.filename)+" WHERE (`id` = "+req.query.id+");"
     
       con.query(sql, function (err, result) {
@@ -214,12 +213,13 @@ app.post("/signup", (req,res) => {
     con.query(q1, function (err, result) {
       if (err) throw err;
       else if(result.length!=0){
-        res.status(202,{
-          'Content-Type' : 'application/json'
+        res.status(403,{
+          'Content-Type' : 'text/plain'
         });
         res.end("Email already exists");
       }
       else{
+        let today = new Date();
         let hashedPassword = bcrypt.hashSync(req.body.password,10);
         let user = {
           'first_name':req.body.first_name,
@@ -227,28 +227,39 @@ app.post("/signup", (req,res) => {
           'email':req.body.email, 
           'password':hashedPassword, 
           'zip':req.body.zip, 
-          'month':req.body.month, 
-          'day':req.body.day, 
-          'year':req.body.year
+          'birthdate':req.body.birthdate,          
         };
 
-        const exec = async () => {
-          console.log("USer = ",user)
-          let sql = "INSERT INTO `yelp`.`user_register` SET"+mysql.escape(user);
-          const temp = await con.query(sql);          
-          console.log("1st response = "+temp);
-        }                
-        exec().then(() => {
-          const exec2 = async () => {
-            let sql2 = "INSERT INTO `yelp`.`user_details` (`first_name`, `last_name`) VALUES ("+mysql.escape(req.body.first_name)+", "+mysql.escape(req.body.last_name)+")";
-            const temp2 = await con.query(sql2);
-            res.status(202,{
+        let sql = "INSERT INTO `yelp`.`user_register` SET"+mysql.escape(user);
+        con.query(sql, (err1, results1) => {
+          if(err1){
+            res.status(403,{
+              'Content-Type' : 'text/plain'
+            });
+            res.end("Unknown error occured. Please refresh and try again");
+          }
+          console.log(results1)
+          let user_details = {
+            'first_name':req.body.first_name,
+            'last_name': req.body.last_name,
+            'id':results1.insertId,
+            'email':req.body.email,
+            'yelping_since': today.getMonth()+"/"+today.getFullYear()
+          };
+          let sql2 = "INSERT INTO `yelp`.`user_details` SET "+mysql.escape(user_details);
+          con.query(sql2, (err2,results2) => {
+            if(err2){
+              res.status(403,{
+                'Content-Type' : 'text/plain'
+              });
+              res.end("Unknown error occured. Please refresh and try again");
+            }
+            res.status(200,{
               'Content-Type' : 'application/json'
             });
             res.end();
-          }          
-          exec2();
-        });
+          });
+        })        
       }
     });
   
@@ -341,28 +352,25 @@ app.get("/getRestData/:rest_id",(req,res) => {
 })
 
 app.post("/update", (req,res) => {
-  
-  
     
   let q1 = "UPDATE `yelp`.`user_details` SET "+mysql.escape(req.body)+" WHERE (`id` = "+mysql.escape(req.body.id)+")";  
-  
-  
-    con.query(q1, function (err, result) {
-      if (err) throw err;
-      else if(result.length!=0){
-        console.log("DONE")
-        res.status(202,{
-          'Content-Type' : 'application/json'
-        });
-        res.end("UPDATED")
-      }
-      else{
-        res.status(403,{
-          'Content-Type' : 'application/json'
-        });
-        res.end("UPDATED")
-      }
+    
+  con.query(q1, function (err, result) {
+    if (err) throw err;
+    else if(result.length!=0){
+      console.log("DONE")
+      res.status(202,{
+        'Content-Type' : 'application/json'
       });
+      res.end("UPDATED")
+    }
+    else{
+      res.status(403,{
+        'Content-Type' : 'application/json'
+      });
+      res.end("UPDATED")
+    }
+    });
   
 })
 
@@ -483,9 +491,9 @@ app.get("/getOrders", (req,res) => {
         //Query 4     
         let q4;
         if(req.query.type === 'rest'){
-          q4 = "Select first_name, last_name from `yelp`.`user_details` where id="+mysql.escape(results[j].user_id);
+          q4 = "Select first_name, ilove, last_name,city, country, state  from `yelp`.`user_details` where id="+mysql.escape(results[j].user_id);
           con.query(q4, (err4, results4) => {
-            temp = {...temp, user_name:results4[0].first_name+" "+ results4[0].last_name}
+            temp = {...temp, user_name:results4[0].first_name+" "+ results4[0].last_name, city:results4[0].city, country:results4[0].country, state:results4[0].state, ilove:results4[0].ilove}
           })
         }          
         else if(req.query.type === `user`){
@@ -518,49 +526,6 @@ app.get("/getOrders", (req,res) => {
     }
   })
 })
-
-// app.get("/getOrders/:rest_id", (req,res) => {
-//   // console.log("Trying to get orders for restid: "+req.params.rest_id)    
-//   let q1 = "Select * from `yelp`.`order_register` where rest_id="+mysql.escape(req.params.rest_id);
-//   answer = []
-//   con.query(q1, function (err2, results) {
-//     if(err2){
-//       console.log("Error occured: "+err2)
-//     }
-
-//     for(let j in results){      
-//       let dishes = []
-//       let temp = {status:results[j].status, order_id:results[j].order_id, mode:results[j].mode, total:results[j].total}
-//       let q2 = "Select * from `yelp`.`order_details` where order_id="+mysql.escape(results[j].order_id);
-//       con.query(q2, (err2, results2) => {        
-//         //Query 4        
-//         let q4 = "Select first_name, last_name from `yelp`.`user_details` where id="+mysql.escape(results[j].user_id);
-//         con.query(q4, (err4, results4) => {
-//           temp = {...temp, user_name:results4[0].first_name+" "+ results4[0].last_name}
-//         })
-//         //Query 3
-//         for(let i in results2){          
-//           console.log("R2: "+JSON.stringify(results2[i]))
-//           let q3 = "Select dish_name from `yelp`.`dish_details` where dish_id="+mysql.escape(results2[i].dish_id);          
-//           con.query(q3, (err3, results3) => {
-//             dishes.push(results2[i].quantity+" * "+results3[0].dish_name)
-//             if(i == results2.length-1){
-//               temp = {...temp, dishes:dishes}
-//               answer.push(temp)
-//               if(j == results.length - 1){
-//                 console.log("Final Asnwer : "+JSON.stringify(answer));
-//                 res.status(200,{
-//                   'Content-Type' : 'application/json'
-//                 });
-//                 res.end(JSON.stringify(answer))
-//               }
-//             }            
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
 
 app.get("/getCart/:user_id", (req,res) => {
   
@@ -683,29 +648,45 @@ app.post("/deleteCart", (req,res) => {
 })
 
 app.get("/getRestaurants", (req,res) => {
-      
   let q1 = "Select * from `yelp`.`rest_details`";
-  
-    con.query(q1, function (err2, results) {      
-      if(err2){
-        console.log("Error occured: "+err2)
-      }
-      console.log("Results = "+JSON.stringify(results))
-      res.status(202,{
-        'Content-Type' : 'application/json'
+  con.query(q1, function (err2, results) {      
+    if(err2){
+      console.log("Error occured: "+err2)
+      res.status(400,{
+        'Content-Type' : 'text/plain'
       });
-      res.end(JSON.stringify(results))
-    })
-  
+      res.end("Error")
+    }
+    console.log("Results = "+JSON.stringify(results))
+    res.status(202,{
+      'Content-Type' : 'application/json'
+    });
+    res.end(JSON.stringify(results))
+  }) 
 })
 
+app.get("/getRestCoords", (req,res) => {
+  let q1 = "SELECT latitude, longitude, rest_name, rest_id from  `yelp`.`rest_details`"
+  con.query(q1, function (err2, results) {
+    if(err2){
+      console.log("Error occured: "+err2)
+    }
+    console.log("Results = "+JSON.stringify(results))
+    res.status(200,{
+      'Content-Type' : 'application/json'
+    });
+    res.end(JSON.stringify(results))
+  })
+});
+
 app.post("/filter", (req,res) => {
-     
   console.log("Filter = "+JSON.stringify(req.body))
 
   let temp1 = ""
   let temp2 = ""
   let temp3 = ""
+  let temp4 = ""
+  let temp5 = ""
 
   if(!req.body.takeout){
     temp1 = "%"
@@ -727,24 +708,42 @@ app.post("/filter", (req,res) => {
   else{
     temp3 = req.body.dineout
   }
+
+  if(!req.body.searchTerm){
+    temp4 = "%"
+  }
+  else{
+    temp4 = req.body.searchTerm
+  }
+
+  if(!req.body.searchLoc){
+    temp5 = "%"
+  }
+  else{
+    temp5 = req.body.searchLoc
+  }
+
   let q1;
 
-  if(req.body.hood !== undefined)
-    q1 = "Select * from `yelp`.`rest_details` where takeout LIKE '"+temp1+"' AND delivery LIKE '"+temp2+"' AND dineout LIKE '"+temp3+"' AND hood in ("+mysql.escape(req.body.hood)+")";
-  else
-    q1 = "Select * from `yelp`.`rest_details` where takeout LIKE '"+temp1+"' AND delivery LIKE '"+temp2+"' AND dineout LIKE '"+temp3+"'";
+  if(req.body.hood !== undefined){
+    q1 = "Select * from `yelp`.`rest_details` where rest_id IN (SELECT rest_id FROM `yelp`.`dish_details` WHERE dish_name LIKE '%"+temp4+"%') AND rest_name LIKE '%"+temp4+"%' AND location LIKE '%"+temp5+"%' AND takeout LIKE '"+temp1+"' AND delivery LIKE '"+temp2+"' AND dineout LIKE '"+temp3+"' AND hood in ("+mysql.escape(req.body.hood)+")";
+  }    
+  else{
+    q1 = "Select * from `yelp`.`rest_details` where rest_id IN (SELECT rest_id FROM `yelp`.`dish_details` WHERE dish_name LIKE '%"+temp4+"%') AND rest_name LIKE '%"+temp4+"%' AND location LIKE '%"+temp5+"%' AND takeout LIKE '"+temp1+"' AND delivery LIKE '"+temp2+"' AND dineout LIKE '"+temp3+"'";
+  }
   console.log("QUERY = "+q1)
   
-    con.query(q1, function (err2, results) {      
-      if(err2){
-        console.log("Error occured: "+err2)
-      }
-      console.log("Results = "+JSON.stringify(results))
-      res.status(202,{
-        'Content-Type' : 'application/json'
-      });
-      res.end(JSON.stringify(results))
-    })
+  con.query(q1, function (err2, results) {      
+    if(err2){
+      console.log("Error occured: "+err2)
+      throw err2;
+    }
+    console.log("Results = "+JSON.stringify(results))
+    res.status(202,{
+      'Content-Type' : 'application/json'
+    });
+    res.end(JSON.stringify(results))
+  })
   
 })
 
@@ -808,9 +807,10 @@ app.post("/filter_order_status", (req,res) => {
         let q4;
 
         if(req.body.type==="rest"){
-          q4 = "Select first_name, last_name from `yelp`.`user_details` where id="+mysql.escape(results[j].user_id);
+          q4 = "Select first_name, ilove, last_name,city, country, state  from `yelp`.`user_details` where id="+mysql.escape(results[j].user_id);
           con.query(q4, (err4, results4) => {
-            temp = {...temp, user_name:results4[0].first_name+" "+ results4[0].last_name}
+            console.log(results4)
+            temp = {...temp, user_name:results4[0].first_name+" "+ results4[0].last_name, city:results4[0].city, country:results4[0].country, state:results4[0].state, ilove:results4[0].ilove}
           })
         }
         else if(req.body.type==="user"){
@@ -843,49 +843,214 @@ app.post("/filter_order_status", (req,res) => {
   })
 })
 
-// app.post("/filter_order_status", (req,res) => {
-//   console.log("Give details reg: "+JSON.stringify(req.body.statuses))
-//   console.log("Rest id ? "+req.body.rest_id)
-  
-//   let q1 = "Select * from `yelp`.`order_register` where status IN ("+mysql.escape(req.body.statuses)+") and rest_id="+mysql.escape(req.body.rest_id);
-//   answer = []
-//   con.query(q1, function (err2, results) {
-//     if(err2){
-//       console.log("Error occured: "+err2)
-//     }
+app.post('/submitReview', (req,res) => {
+  console.log("Here to review : "+JSON.stringify(req.body))
+  let q1 = "INSERT INTO `yelp`.`reviews` SET "+mysql.escape(req.body)
+  con.query(q1, (err, results) => {
+    if(err)
+      throw err
+    console.log("Done")
+  })
+});
 
-//     for(let j in results){      
-//       let dishes = []
-//       let temp = {status:results[j].status, order_id:results[j].order_id, mode:results[j].mode, total:results[j].total}
-//       let q2 = "Select * from `yelp`.`order_details` where order_id="+mysql.escape(results[j].order_id);
-//       con.query(q2, (err2, results2) => {        
-//         //Query 4        
-//         let q4 = "Select first_name, last_name from `yelp`.`user_details` where id="+mysql.escape(results[j].user_id);
-//         con.query(q4, (err4, results4) => {
-//           temp = {...temp, user_name:results4[0].first_name+" "+ results4[0].last_name}
-//         })
-//         //Query 3
-//         for(let i in results2){          
-//           console.log("R2: "+JSON.stringify(results2[i]))
-//           let q3 = "Select dish_name from `yelp`.`dish_details` where dish_id="+mysql.escape(results2[i].dish_id);          
-//           con.query(q3, (err3, results3) => {
-//             dishes.push(results2[i].quantity+" * "+results3[0].dish_name)
-//             if(i == results2.length-1){
-//               temp = {...temp, dishes:dishes}
-//               answer.push(temp)
-//               if(j == results.length - 1){
-//                 console.log("Final Asnwer : "+JSON.stringify(answer));
-//                 res.status(200,{
-//                   'Content-Type' : 'application/json'
-//                 });
-//                 res.end(JSON.stringify(answer))
-//               }
-//             }            
-//           })
-//         }
-//       })
-//     }
-//   })
-// })
+app.get('/getReviews', (req, res) => {
+  console.log("Getting reviews : ")
+  console.log(req.query)
+
+  let q1;
+
+  if(req.query.type==="rest"){
+    q1 = "SELECT * from `yelp`.`reviews` where rest_id = "+mysql.escape(req.query.id);
+  }
+  else if(req.query.type==="user"){
+    q1 = "SELECT * from `yelp`.`reviews` where user_id = "+mysql.escape(req.query.id);
+  }
+  
+  let answer = []
+  con.query(q1, (err,results) => {
+    if(err){
+      throw err;
+    }
+
+    let sum_of_ratings = 0;
+
+    for(let i in results){
+      sum_of_ratings+=results[i].rating;
+
+      let temp = {}
+      console.log(results[i])
+      let q2;
+      if(req.query.type==="rest"){
+        q2 = "SELECT first_name, last_name from `yelp`.`user_details` where id = "+mysql.escape(results[i].user_id);
+      }
+      else if(req.query.type==="user"){
+        q2 = "SELECT rest_name from `yelp`.`rest_details` where rest_id = "+mysql.escape(results[i].rest_id);
+      }
+      console.log("QUERY = "+q2);
+      con.query(q2, (err2, results2) => {
+        console.log(results2);
+        if(req.query.type==="rest"){
+          answer.push({user_name:results2[0].first_name+" "+results2[0].last_name, ...results[i]}) 
+        }
+        else if(req.query.type==="user"){
+          answer.push({rest_name:results2[0].rest_name, ...results[i]})
+        }
+
+        if(i == results.length - 1){
+          res.status(200,{
+            'Content-Type' : 'application/json'
+          });
+          let avg = Math.round(sum_of_ratings/results.length);
+          res.end(JSON.stringify({avg, review_data:answer}))
+        }
+      })
+    }
+
+    console.log("Results: "+JSON.stringify(results));
+    
+  });
+});
+
+app.post("/addEvent", (req,res) => {
+  console.log(req.body)
+
+  let q1 = "INSERT INTO `yelp`.`event_details` SET "+mysql.escape(req.body);
+
+  con.query(q1, (err, results) => {
+    if(err){
+      throw err
+    }
+    console.log(results)
+    res.status(200,{
+      'Content-Type' : 'application/json'
+    });
+    res.end("Event Added")
+  });
+});
+
+app.post("/registerForEvent", (req,res) => {
+  console.log(req.body)
+  let q1 = "INSERT INTO `yelp`.`event_registration` SET "+mysql.escape(req.body);
+  con.query(q1, (err,results) => {
+    if(err){
+      throw err;
+    }
+    res.status(200,{
+      'Content-Type' : 'application/json'
+    });
+    res.end("Registered")
+  });
+});
+
+app.get("/searchEvents/:term", (req,res) => {
+  let q1 = "SELECT * FROM `yelp`.`event_details` where event_name LIKE '%"+req.params.term+"%'";
+  answer = []
+  con.query(q1, (err,results) => {
+    if(err){
+      throw err;
+    }
+    console.log(results)
+    for(let i in results){
+      console.log("Ok "+JSON.stringify(results[i]))
+      let q2 = "SELECT rest_name from `yelp`.`rest_details` where rest_id = "+mysql.escape(results[i].rest_id)      
+      con.query(q2, (err2, results2) => {
+        console.log("Trying")
+        console.log({...results[i], rest_name:results2[0].rest_name})
+        answer.push({...results[i], rest_name:results2[0].rest_name})
+
+        if(i == results.length - 1 ){
+          res.status(200,{
+            'Content-Type' : 'application/json'
+          });
+          res.end(JSON.stringify(answer))
+        }
+      })      
+    }    
+  });
+})
+
+app.get("/getEvents", (req,res) => {
+  let q1 = "SELECT * FROM `yelp`.`event_details` ORDER BY event_date ASC";
+  answer = []
+  con.query(q1, (err,results) => {
+    if(err){
+      throw err;
+    }
+    for(let i in results){
+      let q2 = "SELECT rest_name from `yelp`.`rest_details` where rest_id = "+mysql.escape(results[i].rest_id)      
+      con.query(q2, (err2, results2) => {
+        answer.push({...results[i], rest_name:results2[0].rest_name})
+
+        if(i == results.length - 1 ){
+          res.status(200,{
+            'Content-Type' : 'application/json'
+          });
+          res.end(JSON.stringify(answer))
+        }
+      })      
+    }    
+  });
+});
+
+app.get("/getRestEvents/:rest_id", (req,res) => {
+  console.log("Some ridiculous statemnt")
+  let q1 = "SELECT * FROM `yelp`.`event_details` where rest_id="+mysql.escape(req.params.rest_id);
+  answer = []
+  con.query(q1, (err,results) => {
+    if(err){
+      throw err;
+    }
+    for(let i in results){
+      let q2 = "SELECT user_id from `yelp`.`event_registration` where event_id = "+mysql.escape(results[i].event_id)
+      con.query(q2, (err2, results2) => {
+        if(results2[0] !== undefined){
+          let q3 = "SELECT first_name, last_name, city, state from `yelp`.`user_details` where id = "+mysql.escape(results2[0].user_id)
+
+          con.query(q3, (err3, results3) => {
+            answer.push({...results[i], registeredUsers:results3})
+
+            if(i == results.length - 1 ){
+              console.log("OK<<<<<<<<")
+              console.log(answer);
+              res.status(200,{
+                'Content-Type' : 'application/json'
+              });
+              res.end(JSON.stringify(answer))
+            }
+          })
+        }        
+      })
+    }
+  });
+});
+
+app.get("/getRegisteredEvents/:id", (req,res) => {
+  console.log("Calling for help")
+  let q1 = "SELECT * FROM `yelp`.`event_registration` where user_id="+mysql.escape(req.params.id);
+  console.log("Query : "+q1)
+  let answer = []
+  con.query(q1, (err,results) => {
+    if(err){
+      throw err;
+    }
+    console.log("One : ")
+    console.log(results)
+
+    for(let i in results){
+      let q2 = "SELECT * from `yelp`.`event_details` where event_id = "+mysql.escape(results[i].event_id)      
+      con.query(q2, (err2, results2) => {
+        // answer.push(results2[0])
+        answer.push(results2[0])
+        if(i == results.length - 1 ){
+          res.status(200,{
+            'Content-Type' : 'application/json'
+          });
+          res.end(JSON.stringify(answer))
+        }
+      })      
+    }    
+  });
+});
+
 app.listen(3001);
 console.log("Server Listening on port 3001");

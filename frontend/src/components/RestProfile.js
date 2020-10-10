@@ -101,14 +101,14 @@ class RestProfile extends Component {
                   </Nav.Item>
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
                   <FontAwesomeIcon icon={faStar} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Reviews
+                    <Nav.Link eventKey="disabled" style={{marginLeft:15}}>
+                    <Link to="/showReviews">Reviews</Link>
                     </Nav.Link>
                   </Nav.Item>                                    
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
                   <FontAwesomeIcon icon={faCalendarWeek} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} disabled>
-                    Events
+                    <Nav.Link eventKey="disabled" style={{marginLeft:15}} >
+                    <Link to="/restEvents">Events</Link>
                     </Nav.Link>
                   </Nav.Item>                  
                 </Nav>

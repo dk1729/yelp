@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import InternalHeader from './InternalHeader';
-import {Row,Col, Card, Button} from 'react-bootstrap';
+import {Row, Col, Card, Button} from 'react-bootstrap';
 import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
@@ -8,13 +8,19 @@ import {fetchDishData} from '../actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faCheck, faTimes} from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
+import ReviewModal from './ReviewModal';
 
 class biz extends Component {
-  constructor(props){
-    super(props);
-  }
+  
+  state = {modalShow:false};
+
   componentDidMount(){    
     this.props.fetchDishData(this.props.location.state.restaurant.rest_id);
+  }
+
+  handleModal = event => {
+    event.preventDefault();
+    this.setState({modalShow:true})
   }
 
   handleClick = (dish_id) => {
@@ -40,6 +46,7 @@ class biz extends Component {
         });
 
   }
+
   render() {
     let redirectVar = null;
     if(!window.localStorage.getItem('isSignedIn')){
@@ -126,7 +133,8 @@ class biz extends Component {
                   Take-Out
                 </Col>
               </Row>
-              <Row><Col><Link to="#"><Button style={{marginTop:10, marginLeft:50}}>Add A Review</Button></Link></Col></Row>
+              <Row><Col><Button style={{marginTop:10, marginLeft:50}} onClick = {this.handleModal}>Add A Review</Button></Col></Row>
+              <ReviewModal show={this.state.modalShow} onHide={()=>this.setState({modalShow:false})} rest_id={this.props.location.state.restaurant.rest_id}/>
             </Col>
             <Col>              
               

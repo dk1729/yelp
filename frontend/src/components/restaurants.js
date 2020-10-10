@@ -7,20 +7,29 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {Field, reduxForm} from 'redux-form';
 import axios from 'axios';
+import Maps from './Maps';
 
-var x = null;
 class restaurants extends Component {
+  state = {updatedData:[]}
+
   componentDidMount(){
-    x = null;
     setTimeout(()=>{
       this.props.fetchRestaurants()
-    },0)
+    },0)    
+  }
+
+  componentWillReceiveProps(){
+    console.log("Ok, filtered rests : ")
+    setTimeout(()=>{
+      console.log(this.props.filtered_restaurants)
+      this.setState({updatedData:this.props.filtered_restaurants.filtered_restaurants})
+    },0)    
   }
 
   renderInput = ({input, label, type, placeholder}) => {
     return (
       <div className="field" style={{marginTop:10}}>        
-        <input {...input} type={type} placeholder={placeholder} style={{marginLeft:10, marginTop:10}}/><label style={{marginLeft:10}}>{label}</label>
+        <input {...input} type={type} placeholder={placeholder} style={{marginLeft:20, marginTop:10}}/><label style={{marginLeft:10}}>{label}</label>
       </div>
     );
   }
@@ -29,10 +38,13 @@ class restaurants extends Component {
     console.log("Old formvalues = "+JSON.stringify(formValues))
     let temp = [];
     let newVal = {}
+    console.log("OK, so search terms are ")
+    console.log(this.props.searchTerms)
     for (var key in formValues) {
       if (formValues.hasOwnProperty(key)) {
-          console.log(key + " -> " + formValues[key]);
-          if((key !== "takeout" && key !== "delivery" && key !== "dineout") && formValues[key]){
+        console.log(key + " -> " + formValues[key]);
+        if(formValues[key]){
+          if((key !== "takeout" && key !== "delivery" && key !== "dineout")){
             // temp = temp+", "+key;
             temp.push(key)
           }
@@ -45,12 +57,19 @@ class restaurants extends Component {
           else if(key === "dineout"){
             newVal = {...newVal, dineout:formValues[key]}
           }
+        }        
       }
     }
-    if(temp.length>0)
-      formValues = {...newVal, hood:temp}
-    else
-      formValues = {...newVal, rest_id:window.localStorage.getItem('rest_id')}
+    if(temp.length>0){
+      formValues = {...newVal, hood:temp}      
+    }      
+    else{
+      formValues = {...newVal}
+      // formValues = {...newVal, rest_id:window.localStorage.getItem('rest_id')}
+    }      
+    if(this.props.searchTerms){
+      formValues = {...formValues, searchTerm:this.props.searchTerms.term, searchLoc:this.props.searchTerms.location}
+    }
     console.log("New formvalues = "+JSON.stringify(formValues))
     
     axios.defaults.withCredentials = true;
@@ -58,24 +77,7 @@ class restaurants extends Component {
         .then(response => {
             console.log("Status Code : ",response.status);
             console.log(response)
-            x = response.data.map((restaurant)=>{
-              console.log("REST = "+JSON.stringify(restaurant))
-              return(
-                <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
-                    <Card bg="light" style={{width:"700px",marginLeft:50, marginTop:20, height:"200px"}}>
-                      <Card.Body>
-                        <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
-                        <Card.Text style={{marginLeft:"30%"}}>
-                          <Row><Col>{restaurant.description}</Col></Row>
-                          <Row><Col>Located at: {restaurant.location}</Col></Row>
-                          <Row><Col>We're open: {restaurant.timings}</Col></Row>                              
-                        </Card.Text>
-                      </Card.Body>
-                    </Card>
-                  </Link>
-              )
-            })
-            this.forceUpdate();
+            this.setState({updatedData:response.data})
         }).catch((err)=>{
           console.log("ERRR : ",err)
         });        
@@ -85,20 +87,42 @@ class restaurants extends Component {
     let redirectVar = null;
     if(!window.localStorage.getItem('isSignedIn')){
       redirectVar = <Redirect to= "/login/"/>
-    }        
-
-    console.log(this.props.restaurants.restaurants)
+    }
     let restInfo = null;
     let hoodInfo = [];
-    console.log("X = "+x)
-    if(this.props.restaurants.restaurants.length!==undefined){
+    let markerInfo = [];
+
+    if(this.state.updatedData.length>0){
+      restInfo = this.state.updatedData.map(restaurant => {
+        if(!hoodInfo.includes(restaurant.hood)){
+          hoodInfo.push(restaurant.hood)
+        }
+        markerInfo.push({rest_name:restaurant.rest_name, latitude:restaurant.latitude, longitude:restaurant.longitude})
+        return(
+          <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
+            <Card bg="light" style={{width:"700px",marginLeft:50, marginTop:20, height:"200px"}}>
+              <Card.Body>
+                <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
+                <Card.Text style={{marginLeft:"30%"}}>
+                  <Row><Col>{restaurant.description}</Col></Row>
+                  <Row><Col>Located at: {restaurant.location}</Col></Row>
+                  <Row><Col>We're open: {restaurant.timings}</Col></Row>                              
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Link>
+        )
+      });
+    }
+    else if(this.props.restaurants.restaurants.length!==undefined){
       restInfo = this.props.restaurants.restaurants.map(restaurant => {
         if(!hoodInfo.includes(restaurant.hood)){
           hoodInfo.push(restaurant.hood)
-        }        
+        }
+        markerInfo.push({rest_name:restaurant.rest_name, latitude:restaurant.latitude, longitude:restaurant.longitude})
         return (
           <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
-            <Card bg="light" style={{width:"700px",marginLeft:50, marginTop:20, height:"200px"}}>
+            <Card bg="light" style={{width:"600px",marginLeft:20, marginTop:20, height:"200px"}}>
               <Card.Body>
                 <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
                 <Card.Text style={{marginLeft:"30%"}}>
@@ -123,36 +147,38 @@ class restaurants extends Component {
     return (
       <div>
         {redirectVar}
-        <InternalHeader/>        
-        <Row>
+        <InternalHeader/>
+        <Row style = {{marginLeft : "2%", marginTop:17}}>
           <Col md={2}>
-            <Row><Col><div style={{marginTop:10, marginLeft:10}}>Filter</div></Col></Row>
+            <Row><Col><div style={{marginTop:10, marginLeft:20}}>Filter</div></Col></Row>
             <Row>
               <Col>
-              <div style={{marginTop:10, marginLeft:10}}>Delivery methods</div>
+              <div style={{marginTop:10, marginLeft:20}}>Delivery methods</div>
                 <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
                   <Field name="takeout" component={this.renderInput} type="checkbox" label="Takeout"></Field>
                   <Field name="delivery" component={this.renderInput} type="checkbox" label="Delivery"></Field>
                   <Field name="dineout" component={this.renderInput} type="checkbox" label="Dine-out"></Field>                                   
-                  <div style={{marginTop:10, marginLeft:10}}>Neighbourhoods</div>       
-                  {hoodFilter}
-                  <button className="ui button primary" style={{marginTop:10}}>Apply filters</button>
-                </form>    
+                  <div style={{marginTop:10, marginLeft:20}}>Neighbourhoods</div>       
+                    {hoodFilter}
+                  <button className="ui button primary" style={{marginTop:20}}>Apply filters</button>
+                </form>
               </Col>
             </Row>
           </Col>
-          <Col style={{borderLeft:"1px solid black", borderRight:"1px solid black"}} md={7}>
-            {x===null?restInfo:x}
+          <Col style={{borderLeft:"1px solid black", borderRight:"1px solid black"}} md={6}>
+            {restInfo}
           </Col>
-          <Col md={3}>Map</Col>
+          <Col md={4} style={{height:600, marginLeft:-14}}>
+            <Maps coords={markerInfo}></Maps>
+          </Col>
         </Row>
       </div>
     )
   }
 }
 
-const mapStateToProps = (state) =>{
-  return {restaurants:state.restaurants,  isSignedIn:state.auth.isSignedIn}
+const mapStateToProps = (state) => {
+  return {restaurants:state.restaurants,  isSignedIn:state.auth.isSignedIn, searchTerms:state.searchTerms, filtered_restaurants:state.filtered_restaurants}
 }
 
 export default reduxForm({form:'filterRest'})(connect(mapStateToProps,{fetchRestaurants})(restaurants));

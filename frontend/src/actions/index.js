@@ -76,6 +76,15 @@ export const removeRestID = () => {
   }
 }
 
+export const setSearchTerms = (term, location) => {
+  console.log("Gonna find "+term+" and "+location)
+  return{
+    type:'SET_SEARCH_TERM',
+    term,
+    location
+  }
+}
+
 export function fetchUserData(id) {
   
   return async (dispatch)=>{
@@ -122,6 +131,31 @@ export function fetchRestaurants() {
   }
 }
 
+export function applyFilters(filters) {
+  console.log("Apply these filters: ")
+  console.log(filters)
+
+  return async (dispatch)=>{
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.post("http://localhost:3001/filter/", filters)
+    dispatch({
+      type:'APPLY_FILTERS',
+      payload:response.data
+    })
+  }
+}
+
+export function fetchRestCoords() {
+  return async (dispatch)=>{
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.get("http://localhost:3001/getRestCoords/")
+    dispatch({
+      type:'FETCH_REST_COORDS',
+      payload:response.data
+    })
+  }
+}
+
 export function fetchCart(user_id) {
   console.log("Reached to action")
   return async (dispatch)=>{
@@ -140,6 +174,52 @@ export function fetchOrderData(id, type) {
     const response = await Axios.get("http://localhost:3001/getOrders", {params:{id, type}})
     dispatch({
       type:'FETCH_ORDER_DATA',
+      payload:response.data
+    })
+  }
+}
+
+export function fetchReviews(id, type) {
+  return async (dispatch) => {
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.get("http://localhost:3001/getReviews", {params:{id, type}})
+    dispatch({
+      type:'FETCH_REVIEWS',
+      payload:response.data
+    })
+  }
+}
+
+export function fetchEvents() {
+  return async (dispatch) => {    
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.get("http://localhost:3001/getEvents")
+    dispatch({
+      type:'FETCH_EVENTS',
+      payload:response.data
+    })
+  }
+}
+
+export function fetchRestEvents(rest_id) {
+  console.log()
+  return async (dispatch) => {    
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.get("http://localhost:3001/getRestEvents/"+rest_id)
+    dispatch({
+      type:'FETCH_REST_EVENTS',
+      payload:response.data
+    })
+  }
+}
+
+export function fetchRegisteredEvents(id) {
+  console.log("Action called")
+  return async (dispatch) => {
+    Axios.defaults.withCredentials = true;
+    const response = await Axios.get("http://localhost:3001/getRegisteredEvents/"+id)
+    dispatch({
+      type:'FETCH_REGISTERED_EVENTS',
       payload:response.data
     })
   }

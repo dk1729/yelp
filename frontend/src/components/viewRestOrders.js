@@ -9,8 +9,8 @@ import {Field, reduxForm, Form} from 'redux-form';
 import {Link} from 'react-router-dom';
 
 class viewRestOrders extends Component {
-
   state={updatedData:[]}
+
   componentDidMount(){
     this.props.fetchOrderData(window.localStorage.getItem('rest_id'), "rest");
   }
@@ -148,7 +148,7 @@ class viewRestOrders extends Component {
         return (
           <Card bg="light" style={{width:"1000px",marginLeft:50, marginTop:20, height:"250px"}}>
             <Card.Body>
-              <Card.Title style={{marginLeft:"30%"}}><Link to={{pathname:"/extUserProfile", state:{user_id:order.user_id}}} >{order.user_name}</Link></Card.Title>
+              <Card.Title style={{marginLeft:"30%"}}><Link to={{pathname:"/extUserProfile", state:{name:order.user_name, country:order.country, state:order.state, city:order.city, ilove:order.ilove}}} >{order.user_name}</Link></Card.Title>
               <Card.Text style={{marginLeft:"30%"}}>
                 <Row><Col>{order.mode}</Col></Row>
                 <Row><Col>Total: {order.total}</Col></Row>

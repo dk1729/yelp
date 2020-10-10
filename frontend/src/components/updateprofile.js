@@ -10,7 +10,8 @@ import {Row,Nav,Col} from 'react-bootstrap';
 var redirectVar = null;;
 class updateprofile extends Component {  
   componentDidMount(){    
-    this.props.fetchUserData(window.localStorage.getItem('id'));    
+    this.props.fetchUserData(window.localStorage.getItem('id'));
+    
   }
 
   renderInput({input, label, type, placeholder, meta:{touched, error}}){
@@ -23,18 +24,34 @@ class updateprofile extends Component {
     );
   }
 
-  onSubmit = formValues =>{
+  onSubmit = formValues =>{    
     console.log("Old formvalues = "+formValues)
     formValues = {...formValues, id:window.localStorage.getItem('id')}
     console.log("New formvalues = "+formValues)
-    axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3001/update',formValues)
-        .then(response => {
-            console.log("Status Code : ",response.status);                              
-
-        }).catch((err)=>{
-          console.log("ERRR : ",err)
-        });
+    
+    if(formValues.address){
+      axios.defaults.withCredentials = false;
+      axios.get("https://maps.googleapis.com/maps/api/geocode/json?address="+ formValues.address +"&key=AIzaSyB5f3E2sHlB_ppiVsOTX1oVaSsI9WJktss").then(response => {                    
+        console.log(response.data.results[0].geometry.location)
+        console.log({...formValues, latitude:response.data.results[0].geometry.location.lat, longitude:response.data.results[0].geometry.location.lng})
+        axios.defaults.withCredentials = true;
+        axios.post('http://localhost:3001/update',{...formValues, latitude:response.data.results[0].geometry.location.lat, longitude:response.data.results[0].geometry.location.lng})
+            .then(response => {
+                console.log("Status Code : ",response.status);
+            }).catch((err)=>{
+              console.log("ERRR : ",err)
+            });
+      })
+    }
+    else{
+      axios.defaults.withCredentials = true;
+      axios.post('http://localhost:3001/update',formValues)
+          .then(response => {
+              console.log("Status Code : ",response.status);
+          }).catch((err)=>{
+            console.log("ERRR : ",err)
+          });
+    }    
   }    
   render() {
     redirectVar = null;
@@ -128,6 +145,7 @@ class updateprofile extends Component {
                 <Field placeholder={this.props.formData.ilove} name="ilove" component={this.renderInput} label="I Love" type="text"/>
                 <Field placeholder={this.props.formData.findmein} name="findmein" component={this.renderInput} label="Find Me In" type="text"/>
                 <Field placeholder={this.props.formData.hometown} name="hometown" component={this.renderInput} label="My Hometown" type="text"/>
+                <Field placeholder={this.props.formData.address} name="address" component={this.renderInput} label="Address" type="text"/>
                 <Field placeholder={this.props.formData.blog} name="blog" component={this.renderInput} label="My Blog" type="text"/>
                 <Field placeholder={this.props.formData.whennotyelping} name="whennotyelping" component={this.renderInput} label="When I'm not Yelping" type="text"/>
                 <Field placeholder={this.props.formData.whyreadreviews} name="whyreadreviews" component={this.renderInput} label="Why You Should Read My Reviews" type="text"/>
