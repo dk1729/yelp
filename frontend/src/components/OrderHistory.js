@@ -24,21 +24,12 @@ class OrderHistory extends Component {
 
   onSubmit = formValues => {
     console.log("Ok")
+    console.log(formValues)
     let temp = []
     for (var key in formValues) {
       if (formValues.hasOwnProperty(key)) {
         console.log(key + " -> " + formValues[key]);
-        console.log("status -> " + key);
-        if(key === "past" && formValues[key]){
-          temp.push("delivered")
-          temp.push("picked_up")
-        }
-        else if(key === "current" && formValues[key]){
-          temp.push("ready_for_pickup")
-          temp.push("out_for_delivery")
-          temp.push("Placed")
-        }
-        else if(key === "cancelled" && formValues[key]){
+        if(formValues[key]){
           temp.push(key)
         }        
       }
@@ -57,7 +48,7 @@ class OrderHistory extends Component {
   }
 
   render() {
-
+    let filter_options = null;
     let order_cards = null;
     if(this.state.updatedData.length>0){
       order_cards = this.state.updatedData.map(order => {
@@ -71,10 +62,10 @@ class OrderHistory extends Component {
         //Delivery: Received, Preparing, Out for delivery, deivered, cancelled
         //Takeout: Received, Preparing, Ready for pickup, picked up, cancelled
         return (
-          <Card bg="light" style={{width:"1000px",marginLeft:50, marginTop:20, height:"200px"}}>
+          <Card bg="white" className="shadow p-3 mb-5 rounded" style={{width:"700px",marginLeft:50, marginTop:20, height:"200px"}}>
             <Card.Body>
-              <Card.Title style={{marginLeft:"30%"}}>{order.rest_name}</Card.Title>
-              <Card.Text style={{marginLeft:"30%"}}>
+              <Card.Title style={{marginLeft:"10%"}}>{order.rest_name}</Card.Title>
+              <Card.Text style={{marginLeft:"10%"}}>
                 <Row><Col>{order.mode}</Col></Row>
                 <Row><Col>Total: {order.total}</Col></Row>
                 <Row><Col>Status: {order.status}</Col></Row>
@@ -92,15 +83,15 @@ class OrderHistory extends Component {
           return (
             <Row><Col>{dish}</Col></Row>
           )
-        })        
+        })
 
         //Delivery: Received, Preparing, Out for delivery, deivered, cancelled
         //Takeout: Received, Preparing, Ready for pickup, picked up, cancelled
         return (
-          <Card bg="light" style={{width:"1000px",marginLeft:50, marginTop:20, height:"200px"}}>
+          <Card bg="white" className="shadow p-3 mb-5 rounded" style={{width:"700px",marginLeft:50, marginTop:20, height:"200px"}}>
             <Card.Body>
-              <Card.Title style={{marginLeft:"30%"}}>{order.rest_name}</Card.Title>
-              <Card.Text style={{marginLeft:"30%"}}>
+              <Card.Title style={{marginLeft:"10%"}}>{order.rest_name}</Card.Title>
+              <Card.Text style={{marginLeft:"10%"}}>
                 <Row><Col>{order.mode}</Col></Row>
                 <Row><Col>Total: {order.total}</Col></Row>
                 <Row><Col>Status: {order.status}</Col></Row>
@@ -116,13 +107,17 @@ class OrderHistory extends Component {
       <div>
         <InternalHeader/>
         <Row>
-          <Col md={2} style={{borderRight:"1px solid black", marginLeft:10}}>
-            <Row><Col><h4>Filter</h4></Col></Row>
+          <Col md={2} className="shadow p-3 mb-5 rounded">
+            <Row><Col><div style={{marginTop:10, marginLeft:10}}><h4>Filter</h4></div></Col></Row>
             <Form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-              <Row><Col><Field component={this.renderInput} type="checkbox" name="current" label="Current Orders"></Field></Col></Row>
-              <Row><Col><Field component={this.renderInput} type="checkbox" name="past" label="Past Orders"></Field></Col></Row>
-              <Row><Col><Field component={this.renderInput} type="checkbox" name="cancelled" label="Cancelled Orders"></Field></Col></Row>
-              <Row><Col><button className="ui button primary" style={{marginTop:10}}>Apply filters</button></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="Placed" label="Order Received"></Field></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="preparing" label="Preparing"></Field></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="out_for_delivery" label="Out For Delivery"></Field></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="delivered" label="Delivered"></Field></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="ready_for_pickup" label="Ready For Pickup"></Field></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="picked_up" label="Picked Up"></Field></Col></Row>
+              <Row><Col><Field component={this.renderInput} type="checkbox" name="cancelled" label="Cancelled"></Field></Col></Row>
+              <Row><Col><button className="ui button primary" style={{marginTop:10, marginLeft:10, backgroundColor:"#d32323"}}>Apply filters</button></Col></Row>
             </Form>
           </Col>
           <Col>

@@ -10,7 +10,7 @@ import axios from 'axios';
 import Maps from './Maps';
 
 class restaurants extends Component {
-  state = {updatedData:[]}
+  state = {updatedData:[], nosuch:false}
 
   componentDidMount(){
     setTimeout(()=>{
@@ -75,11 +75,13 @@ class restaurants extends Component {
     axios.defaults.withCredentials = true;
     axios.post('http://localhost:3001/filter',formValues)
         .then(response => {
-            console.log("Status Code : ",response.status);
-            console.log(response)
-            this.setState({updatedData:response.data})
+            console.log("Status Code : ",response.status);            
+            if(response.status === 200){
+              this.setState({updatedData:response.data, nosuch:false})
+            }            
         }).catch((err)=>{
           console.log("ERRR : ",err)
+          this.setState({nosuch:true})          
         });        
   }
 
@@ -92,7 +94,10 @@ class restaurants extends Component {
     let hoodInfo = [];
     let markerInfo = [];
 
-    if(this.state.updatedData.length>0){
+    if(this.state.nosuch){
+     restInfo = <div>No such restaurants</div> 
+    }
+    else if(this.state.updatedData.length>0){
       restInfo = this.state.updatedData.map(restaurant => {
         if(!hoodInfo.includes(restaurant.hood)){
           hoodInfo.push(restaurant.hood)
@@ -102,12 +107,15 @@ class restaurants extends Component {
           <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
             <Card bg="white" className="shadow p-3 mb-5 rounded" style={{color:"black", width:"600px",marginLeft:20, marginTop:15, height:"200px"}}>
               <Card.Body>
-                <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
-                <Card.Text style={{marginLeft:"30%"}}>
+              <div style={{width:"100px",height:"100px", float:"left"}}><img alt="Profile Photo" src={`http://localhost:3001/${restaurant.path1}`} style={{width:"100px",height:"100px"}}></img></div>
+              <div>
+                <Card.Title style={{marginLeft:"30%", marginTop:-10}}>{restaurant.rest_name}</Card.Title>
+                <Card.Text style={{marginLeft:"30%", marginTop:-10}}>
                   <Row><Col>{restaurant.description}</Col></Row>
                   <Row><Col>Located at: {restaurant.location}</Col></Row>
                   <Row><Col>We're open: {restaurant.timings}</Col></Row>                              
                 </Card.Text>
+              </div>
               </Card.Body>
             </Card>
           </Link>
@@ -124,12 +132,15 @@ class restaurants extends Component {
           <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
             <Card bg="white" className="shadow p-3 mb-5 rounded" style={{color:"black", width:"600px",marginLeft:20, marginTop:15, height:"200px"}}>
               <Card.Body>
+              <div style={{width:"100px",height:"100px", float:"left"}}><img alt="Profile Photo" src={`http://localhost:3001/${restaurant.path1}`} style={{width:"100px",height:"100px"}}></img></div>
+              <div>
                 <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
                 <Card.Text style={{marginLeft:"30%"}}>
                   <Row><Col>{restaurant.description}</Col></Row>
                   <Row><Col>Located at: {restaurant.location}</Col></Row>
                   <Row><Col>We're open: {restaurant.timings}</Col></Row>                              
                 </Card.Text>
+              </div>
               </Card.Body>
             </Card>
           </Link>
@@ -149,7 +160,7 @@ class restaurants extends Component {
         {redirectVar}
         <InternalHeader/>
         <Row>
-          <Col md={2} className="shadow p-3 mb-5 rounded">
+          <Col md={2} style={{height:"100%"}} className="shadow p-3 mb-5 rounded">
             <Row><Col><div style={{marginTop:10, marginLeft:20}}><h4>Filter</h4></div></Col></Row>
             <Row>
               <Col>

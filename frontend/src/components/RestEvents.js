@@ -4,12 +4,11 @@ import {Row, Col} from 'react-bootstrap';
 import {fetchRestEvents} from '../actions';
 import CreateEventModal from './CreateEventModal';
 import {connect} from 'react-redux';
-import {Form, Button, Card, Input } from 'semantic-ui-react';
-import axios from 'axios';
+import {Button, Card } from 'semantic-ui-react';
 import RegisteredUsersModal from './RegisteredUsersModal';
 
 class RestEvents extends Component {
-  state = {modalShow:false, modal2:false};
+  state = {modalShow:false, modal2:false, RU:[]};
 
   componentDidMount(){
     this.props.fetchRestEvents(window.localStorage.getItem('rest_id'));
@@ -20,9 +19,15 @@ class RestEvents extends Component {
     this.setState({modalShow:true})
   }
 
-  handleModal2 = event => {
-    event.preventDefault();
-    this.setState({modal2:true})
+  handleHide = () => {
+    this.props.fetchRestEvents(window.localStorage.getItem('rest_id'));
+    this.setState({modalShow:false})
+  }
+
+  handleModal2 = (id, RU) => {
+    console.log("ID........."+id)    
+    console.log("Modal 2 clicked")
+    this.setState({RU:RU, modal2:true})
   }
 
   render() {
@@ -31,45 +36,49 @@ class RestEvents extends Component {
     let event_cards = null;
     if(this.props.restEvents.restEvents.length!==undefined){
       event_cards = this.props.restEvents.restEvents.map(event => {
+        console.log(event.event_id)
+        console.log(event.registeredUsers)
         return(
-          <Card>
-            <Card.Content>
-              <Card.Header>{event.event_name}</Card.Header>
-              <Card.Meta>{event.event_hash}</Card.Meta>
-              <Card.Description>
-                {event.event_description}
-              </Card.Description>
-            </Card.Content>
-            <Card.Content>
-              Event Date: {event.event_date.substring(0,10)}
-            </Card.Content>
-            <Card.Content>
-              {event.event_location}
-            </Card.Content>
-            <Card.Content extra>
-                <Button basic color='green' onClick = {this.handleModal2}>
-                  Show Registered Users
-                </Button>
-                <RegisteredUsersModal users={event.registeredUsers} show={this.state.modal2} onHide={()=>this.setState({modal2:false})}/>
-            </Card.Content>
-          </Card>
+          <div key={event.event_id}>
+            <Card>
+              <Card.Content>
+                <Card.Header>{event.event_name}</Card.Header>
+                <Card.Meta>{event.event_hash}</Card.Meta>
+                <Card.Description>
+                  {event.event_description}
+                </Card.Description>
+              </Card.Content>
+              <Card.Content>
+                Event Date: {event.event_date.substring(0,10)}
+              </Card.Content>
+              <Card.Content>
+                {event.event_location}
+              </Card.Content>
+              <Card.Content extra>
+                  <Button basic color='green' onClick = {() => this.handleModal2(event.event_id, event.registeredUsers)}>
+                    Show Registered Users
+                  </Button>                  
+              </Card.Content>
+            </Card>
+          </div>
         )
       })
     }
     return (
       <div>
         <InternalRestHeader/>
+        <RegisteredUsersModal users={this.state.RU} show={this.state.modal2} onHide={()=>this.setState({modal2:false})}/>
         <Row>
-          <Col md={3} style={{borderRight:"1px solid black"}}>
+          <Col md={2} >
             <Row>
-              <Col>
-                <Button style={{marginTop:10, marginLeft:50}} onClick = {this.handleModal}>Create Event</Button>
-                <CreateEventModal show={this.state.modalShow} onHide={()=>this.setState({modalShow:false})}/>
+              <Col >
+                <Button className="shadow p-3 mb-5 rounded" style={{marginTop:10}} style={{marginTop:10, marginLeft:50, backgroundColor:"#d32323", color:"white"}} onClick = {this.handleModal}>Create Event</Button>
+                <CreateEventModal show={this.state.modalShow} onHide={this.handleHide}/>
               </Col>
             </Row>
           </Col>
           <Col>
-            <Card.Group>
+            <Card.Group style={{marginLeft:10, marginTop:10}}>
               {event_cards}  
             </Card.Group>
           </Col>

@@ -3,29 +3,32 @@ import axios from 'axios';
 import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import InternalHeader from './InternalHeader';
+import ImageUploader from 'react-images-upload';
+import {Button} from 'semantic-ui-react';
+
 class addphoto extends Component {
-  addPic = (event) => {
-    event.preventDefault()
-    const formData = new FormData()
-    formData.append("profile_photo", event.target.files[0])
+
+  onDrop = (picture) => {
+    console.log(picture.target.files[0])
+    var formData = new FormData();
+    formData.append('image', picture.target.files[0]);
+    formData.append('id', window.localStorage.getItem('id'));
+    for (var key of formData.entries()) {
+			console.log(key[0] + ', ' + key[1])
+    }
+
     const config = {
       headers:{
-        'content-type':'multipart/form-data'
-      },
-      params:{
-        id:window.localStorage.getItem('id')
+        'enctype':'multipart/form-data'
       }
-    };
+    }
     axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3001/upload', formData, config)
-    .then(response=>{
-      console.log("File uploaded successfully");
-    })
-    .catch(err=>{
-      console.log("ERRRRR: "+err);
-    });
-    console.log(event.target.files[0])
-  }
+    axios.post("http://localhost:3001/upload", formData, config)
+      .then(res => {
+        console.log(res)
+      })
+  }  
 
   render() {
     let redirectVar = null;
@@ -33,16 +36,11 @@ class addphoto extends Component {
         redirectVar = <Redirect to= "/login/"/>
     }
     return (      
-      <div className="container">
+      <div>
         {redirectVar}
-        <div className="row">
-            <form>
-                <h3>React File Upload</h3>
-                <div className="form-group">
-                  <input accept='.jpg, .png, .jpeg' type="file"  onChange={this.addPic}/>
-                </div>
-                <Link to="/profile">Profile</Link>
-            </form>
+        <InternalHeader/>
+        <div>
+          <input type = 'file' onChange = {this.onDrop} />
         </div>
       </div>
     )

@@ -7,6 +7,7 @@ import Login from './Login';
 import Profile from './Profile';
 import updateprofile from './updateprofile';
 import addphoto from './addphoto';
+import addRestPhotos from './addRestPhotos';
 import RestSignup from './RestSignup';
 import RestLogin from './RestLogin';
 import RestProfile from './RestProfile';
@@ -50,6 +51,7 @@ class App extends React.Component{
           <Route path="/showPastReviews" component={ShowPastReviews}/>
           <Route path="/restEvents" component={RestEvents}/>
           <Route path="/showEvents" component={ShowEvents}/>
+          <Route path="/addrestphotos" component={addRestPhotos}/>
         </div>
       </BrowserRouter>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import InternalHeader from './InternalHeader';
-import {Row, Col, Card} from 'react-bootstrap';
+import {Row, Col, Card, Toast} from 'react-bootstrap';
 import {Table, Button} from 'semantic-ui-react';
 import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
@@ -13,7 +13,7 @@ import ReviewModal from './ReviewModal';
 
 class biz extends Component {
   
-  state = {modalShow:false};
+  state = {modalShow:false, message:"", show:false};
 
   componentDidMount(){    
     this.props.fetchDishData(this.props.location.state.restaurant.rest_id);
@@ -24,8 +24,9 @@ class biz extends Component {
     this.setState({modalShow:true})
   }
 
-  handleClick = (dish_id) => {
+  handleClick = (dish_id, dish_path) => {
     console.log("Dish ID = "+dish_id)
+    console.log("Dish ID = "+dish_path)
     console.log("Rest ID = "+this.props.location.state.restaurant.rest_id)
     console.log("User ID = "+window.localStorage.getItem('id'));
     console.log("Count = "+document.getElementById(dish_id).value)
@@ -35,15 +36,23 @@ class biz extends Component {
       console.log("Hola")
     }
     axios.defaults.withCredentials = true;
-    axios.post('http://localhost:3001/addToCart',{dish_id, rest_id:this.props.location.state.restaurant.rest_id, user_id:window.localStorage.getItem('id'), count})
+    axios.post('http://localhost:3001/addToCart',{dish_id, dish_path, rest_id:this.props.location.state.restaurant.rest_id, user_id:window.localStorage.getItem('id'), count})
         .then(response => {
             console.log("Status Code : ",response.status);
             console.log(response)            
-            if(response.status === 202){
+            if(response.status === 200){
               console.log("Added to cart")
+              this.setState({show:true, message:"Added to cart"})
+              setTimeout(()=>{
+                this.setState({show:false})
+              },1000)
             }            
         }).catch(()=>{
           console.log("ERRR")
+          this.setState({message:"Some error occured"})
+              setTimeout(()=>{
+                this.setState({show:false})
+              },1000)
         });
 
   }
@@ -60,6 +69,8 @@ class biz extends Component {
         return (          
           <Card bg="white" className="shadow p-3 mb-5 rounded" style={{width:"800px",marginLeft:50, height:"250px"}}>
             <Card.Body>
+            <div style={{width:"200px",height:"200px", float:"left"}}><img alt="Profile Photo" src={`http://localhost:3001/${dish.dish_path}`} style={{width:"200px",height:"200px"}}></img></div>
+            <div >
               <Card.Title style={{marginLeft:"30%"}}>{dish.dish_name}</Card.Title>
               <Card.Text style={{marginLeft:"30%"}}>
                 <Row style={{marginTop:10}}><Col>{dish.description}</Col></Row>
@@ -67,8 +78,9 @@ class biz extends Component {
                 <Row style={{marginTop:2}}><Col>Ingredients: {dish.ingredients}</Col></Row>
                 <Row style={{marginTop:2}}><Col>Eat it for: {dish.dish_type}</Col></Row>
                 <Row style={{marginTop:2}}><Col>Quantity: <input type="number" id={dish.dish_id}/></Col></Row>
-                <Row style={{marginTop:2}}><Col><Button style={{marginTop:20, color:"white", backgroundColor:"#d32323"}} onClick={()=>this.handleClick(dish.dish_id)}>Add To Cart</Button></Col></Row>
+                <Row style={{marginTop:2}}><Col><Button style={{marginTop:20, color:"white", backgroundColor:"#d32323"}} onClick={()=>this.handleClick(dish.dish_id, dish.dish_path)}>Add To Cart</Button></Col></Row>
               </Card.Text>
+            </div>
             </Card.Body>
           </Card>
         )        
@@ -107,16 +119,24 @@ class biz extends Component {
         </Table.Row>
       )
     })
-
-    return (
+    console.log(this.props.location.state.restaurant)
+    return (      
       <div>
         {redirectVar}
-        <InternalHeader/>
+        <InternalHeader/>        
         <div style={{border:"1px solid black", marginTop:20, height:"200px"}}>
-          Images go here
+          <Row>          
+            <Col><img alt="Profile Photo" src={`http://localhost:3001/${this.props.location.state.restaurant.path1}`} style={{width:"110%",height:"200px"}}></img></Col>
+            <Col><img alt="Profile Photo" src={`http://localhost:3001/${this.props.location.state.restaurant.path2}`} style={{width:"110%",height:"200px"}}></img></Col>
+            <Col><img alt="Profile Photo" src={`http://localhost:3001/${this.props.location.state.restaurant.path3}`} style={{width:"110%",height:"200px"}}></img></Col>
+            <Col><img alt="Profile Photo" src={`http://localhost:3001/${this.props.location.state.restaurant.path4}`} style={{width:"110%",height:"200px"}}></img></Col>
+          </Row>
         </div>
         <div style={{marginTop:10, height:"200px", borderBottom:"1px solid #eeeeef"}}>
           <Row>
+            <Toast onClose={() => this.setState({show:true})} show={this.state.show} style={{position: 'absolute',top: 120,right: 10}} autohide>
+              <Toast.Header>{this.state.message}</Toast.Header>
+            </Toast>
             <Col style={{borderRight:"1px solid black"}}>
               <Row><Col><h1 style={{fontWeight:900, fontFamily:"Poppins,Helvetica Neue,Helvetica,Arial,sans-serif", marginLeft:50, color:"#2b273c", fontSize:"48px"}}>{this.props.location.state.restaurant.rest_name}</h1></Col></Row>
               <Row><Col><h4 style={{marginTop:10, marginLeft:50, color:"#2b273c"}}>{this.props.location.state.restaurant.description}</h4></Col></Row>              

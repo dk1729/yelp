@@ -101,9 +101,11 @@ class Profile extends Component {
                 </Nav>
               </div>
             </Col>
-            <Col>Useless Stuff</Col>
             <Col>
-              <div style={{marginLeft:10, marginTop:10, borderLeft:"1px solid #e6e6e6",width:"300px",height:"150px"}}>
+              Useless Stuff
+            </Col>
+            <Col>
+              <div style={{marginLeft:10, marginTop:10, borderLeft:"1px solid #e6e6e6",width:"300px",height:"10px"}}>
                 <Row>
                     <Col style={{marginLeft:10}}>
                       <span>

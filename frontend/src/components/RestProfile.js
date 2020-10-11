@@ -4,7 +4,7 @@ import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import InternalRestHeader from './InternalRestHeader';
 import {fetchRestData, fetchDishData} from '../actions';
-import {Row,Col, Nav} from 'react-bootstrap';
+import {Row,Col, Nav, Card} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faCalendarWeek, faStar, faUser, faUserFriends, faCamera, faIdCard } from '@fortawesome/free-solid-svg-icons'
 
@@ -25,15 +25,24 @@ class RestProfile extends Component {
     let dishesInfo = null;
     if(this.props.dishes.dishes.length !== undefined){
       dishesInfo = this.props.dishes.dishes.map(dish => {
-        return <div key={dish.dish_id} style={{border:"1px solid black", marginTop:"10px"}}>
-          <div style={{marginLeft:"10px"}}>Name: {dish.dish_name}</div>
-          <div style={{marginLeft:"10px"}}>Description: {dish.description}</div>
-          <div style={{marginLeft:"10px"}}>$$: {dish.dish_price}</div>
-          <div style={{marginLeft:"10px"}}>Ingredients: {dish.ingredients}</div>
-          <div style={{marginLeft:"10px"}}>Eat it for: {dish.dish_type}</div>
-          {/* <Link to="/updateDish">Edit</Link> */}
-          <Link style={{marginLeft:"10px"}} to={{pathname:'/updateDish', state:{ingredients:dish.ingredients, dish_type:dish.dish_type, dish_id:dish.dish_id,dish_name:dish.dish_name, description:dish.description, dish_price:dish.dish_price} }}>Edit</Link>
-        </div>
+        return (
+          <Card bg="white" className="shadow p-3 mb-5 rounded" style={{color:"black", width:"600px",marginLeft:20, marginTop:15, height:"200px"}}>
+              <Card.Body>
+                {/* <Card.Img style={{width:100, height:100}} src={`http://localhost:3001/${this.props.restDetails.path1}`}></Card.Img> */}
+                <div style={{width:"100px",height:"100px", float:"left"}}><img alt="Profile Photo" src={`http://localhost:3001/${dish.dish_path}`} style={{width:"100px",height:"100px"}}></img></div>
+                <div>
+                  <Card.Title style={{marginLeft:"30%"}}>Name: {dish.dish_name}</Card.Title>
+                  <Card.Text style={{marginLeft:"30%"}}>
+                    <Row><Col>Description: {dish.description}</Col></Row>
+                    <Row><Col>$$: {dish.dish_price}</Col></Row>
+                    <Row><Col>Ingredients: {dish.ingredients}</Col></Row>
+                    <Row><Col>Eat it for: {dish.dish_type}</Col></Row>
+                    <Link to={{pathname:'/updateDish', state:{ingredients:dish.ingredients, dish_type:dish.dish_type, dish_id:dish.dish_id,dish_name:dish.dish_name, description:dish.description, dish_price:dish.dish_price} }}>Edit</Link>
+                  </Card.Text>
+                </div>
+              </Card.Body>
+            </Card>
+        )        
       })
     }
     return (
@@ -44,8 +53,7 @@ class RestProfile extends Component {
           <Row>
             <Col>
               <div style={{marginLeft:100, marginTop:40, border:"1px solid black",width:"220px",height:"220px"}}>
-                {/* <img alt="Profile Photo" src={`http://localhost:3001/${this.props.formData.path}`} style={{width:"220px",height:"220px"}}></img> */}
-                image goes here
+                <img alt="Profile Photo" src={`http://localhost:3001/${this.props.restDetails.path1}`} style={{width:"220px",height:"220px"}}></img>
               </div>
             </Col>
             <Col>
@@ -63,7 +71,7 @@ class RestProfile extends Component {
                     <span style={{marginLeft:10, marginTop:10, color:"#007BFF"}}>
                       <FontAwesomeIcon icon={faCamera}></FontAwesomeIcon>
                     </span>
-                    <Link style={{marginLeft:10, marginTop:10}} to="/addphoto">Add Photos</Link>                     
+                    <Link style={{marginLeft:10, marginTop:10}} to="/addrestphotos">Add Photos</Link>                     
                   </Col>
                 </Row>
                 <Row>
@@ -97,7 +105,7 @@ class RestProfile extends Component {
                   </Nav.Item>                  
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>                                        
                     <FontAwesomeIcon icon={faUser} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>
-                    <Nav.Link eventKey="disabled" style={{marginLeft:15}}><Link to="/rest_orders">Current Orders</Link></Nav.Link>
+                    <Nav.Link eventKey="disabled" style={{marginLeft:15}}><Link to="/rest_orders">Orders</Link></Nav.Link>
                   </Nav.Item>
                   <Nav.Item style={{borderBottom:"1px solid #e6e6e6"}}>
                   <FontAwesomeIcon icon={faStar} style={{marginTop:10, marginLeft:10, float:"left"}}></FontAwesomeIcon>

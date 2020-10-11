@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
-import {Row,Col, Modal} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { Segment } from 'semantic-ui-react'
+import {Link} from 'react-router-dom';
 
 export default class RegisteredUsersModal extends Component {
-  render() {
-    let segments = null;
 
+  render() {
+    let segments = null;    
+    console.log(this.props)
     if(this.props.users.length!==undefined){
       segments = this.props.users.map(user => {
-        return (
-          <Segment color="red">{user.first_name} {user.last_name} from {user.city}, {user.state}</Segment>
+        return (          
+          <Segment color="red"><Link to={{pathname:"/extUserProfile", state:{user_details:user}}}>{user.first_name} {user.last_name}</Link></Segment>
         )
       })
     }    

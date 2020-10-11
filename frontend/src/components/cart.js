@@ -3,17 +3,17 @@ import InternalHeader from './InternalHeader';
 import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchCart} from '../actions';
-import {Row,Col, Card, Button} from 'react-bootstrap';
+import {Row, Col, Card, Toast} from 'react-bootstrap';
+import {Button} from 'semantic-ui-react';
 import axios from 'axios';
 import {Form, Field, reduxForm} from 'redux-form';
 
 class cart extends Component {
-
+  state = {message:"", show:false}
   renderInput({input, label, type}){
     return (
-      <div className="field">
-        <label>{label}</label>
-        <input {...input} type={type}/>
+      <div className="two fields">        
+        <label>{label}</label> <input {...input} type={type}/>
       </div>
     );
   }
@@ -56,11 +56,20 @@ class cart extends Component {
             console.log("Status Code : ",response.status);
             console.log(response)            
             if(response.status === 200){
+              this.props.fetchCart(window.localStorage.getItem('id'));
               console.log("Order placed")
-              this.forceUpdate();
+              this.setState({show:true, message:"Order Placed"})
+              setTimeout(()=>{
+                this.setState({show:false})
+              },1000)
+              console.log("Timeout set")
             } 
         }).catch(()=>{
           console.log("ERRR")
+          this.setState({message:"Some error occured"})
+          setTimeout(()=>{
+            this.setState({show:false})
+          },1000)
         });
   }
 
@@ -68,27 +77,25 @@ class cart extends Component {
     let dishInfo = null;        
     let takeout = null;
     let delivery = null;
-    let dineout = null;
     let total = 0;    
     if(this.props.cart.cart.length !== undefined){      
 
       if(this.props.cart.cart[0].takeout === "true"){
-        takeout = <Col><Field type="radio" value="takeout" label="takeout" name="mode" component={this.renderInput}/></Col>
+        takeout = <Col><Field type="radio" value="takeout" label="Takeout" name="mode" component={this.renderInput}/></Col>
       }      
 
       if(this.props.cart.cart[0].delivery === "true"){
-        delivery = <Col><Field type="radio" value="delivery" name="mode" label="delivery" component={this.renderInput}/></Col>        
-      }      
-
-      if(this.props.cart.cart[0].dineout === "true"){
-        dineout = <Col><Field type="radio" value="dineout" name="mode" label="dineout" component={this.renderInput}/></Col>
+        delivery = <Col><Field type="radio" value="delivery" name="mode" label="Delivery" component={this.renderInput}/></Col>        
       }      
 
       dishInfo = this.props.cart.cart.map(dish => {
         total += dish.dish_price*dish.quantity
+        console.log(dish)
         return (
-          <Card bg="light" key={dish.cart_id} style={{width:"800px",marginLeft:50, marginTop:20, height:"200px"}}>
+          <Card bg="white" className="shadow p-3 mb-5 rounded" key={dish.cart_id} style={{width:"800px",marginLeft:50, marginTop:20, height:"200px"}}>
             <Card.Body>
+            <div style={{width:"150px",height:"150px", float:"left"}}><img alt="Profile Photo" src={`http://localhost:3001/${dish.dish_path}`} style={{width:"150px",height:"150px"}}></img></div>
+            <div>
               <Card.Title style={{marginLeft:"30%"}}>{dish.dish_name}</Card.Title>
               <Card.Text style={{marginLeft:"30%"}}>
                 <Row><Col>Offered by: {dish.rest_name}</Col></Row>
@@ -96,6 +103,7 @@ class cart extends Component {
                 <Row><Col>Quantity: {dish.quantity}</Col></Row>
                 <Row><Col><Button style={{marginTop:10}} onClick={()=>this.handleClick(dish.cart_id)}>Remove from Cart</Button></Col></Row>
               </Card.Text>
+            </div>
             </Card.Body>
           </Card>
         )        
@@ -111,8 +119,11 @@ class cart extends Component {
         {redirectVar}
         <InternalHeader/>
         <Row>
+          <Toast onClose={() => this.setState({show:false})} show={this.state.show} style={{position: 'absolute',top: 120,right: 10}} autohide>
+            <Toast.Header>{this.state.message}</Toast.Header>
+          </Toast>
           <Col>
-            {dishInfo}
+            {dishInfo?dishInfo:"Cart is empty"}
           </Col>    
           <Col>      
             <Row><Col style={{marginTop:50, fontWeight:1000, fontSize:20}}>{dishInfo?`Total = ${total}`:""}</Col></Row>
@@ -120,8 +131,7 @@ class cart extends Component {
               <Form onSubmit={this.props.handleSubmit(this.onSubmit)}>                
                 {takeout}
                 {delivery}
-                {dineout}
-                {dishInfo?<button style={{marginTop:10}} type="submit">Place order</button>:""}
+                {dishInfo?<Button style={{marginTop:10, marginLeft:13, backgroundColor:"#d32323", color:"white"}} type="submit">Place order</Button>:""}
               </Form>
             </Row>
           </Col>
