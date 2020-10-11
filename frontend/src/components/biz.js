@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import InternalHeader from './InternalHeader';
-import {Row, Col, Card, Button} from 'react-bootstrap';
+import {Row, Col, Card} from 'react-bootstrap';
+import {Table, Button} from 'semantic-ui-react';
 import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
@@ -57,16 +58,16 @@ class biz extends Component {
     if(this.props.dishes.dishes.length !== undefined){      
       dishInfo = this.props.dishes.dishes.map(dish => {
         return (          
-          <Card bg="light" style={{width:"800px",marginLeft:50, marginTop:20, height:"200px"}}>
+          <Card bg="white" className="shadow p-3 mb-5 rounded" style={{width:"800px",marginLeft:50, height:"250px"}}>
             <Card.Body>
               <Card.Title style={{marginLeft:"30%"}}>{dish.dish_name}</Card.Title>
               <Card.Text style={{marginLeft:"30%"}}>
-                <Row><Col>{dish.description}</Col></Row>
-                <Row><Col>$$: {dish.dish_price}</Col></Row>
-                <Row><Col>Ingredients: {dish.ingredients}</Col></Row>
-                <Row><Col>Eat it for: {dish.dish_type}</Col></Row>
-                <Row><Col>Quantity: <input type="number" id={dish.dish_id}/></Col></Row>
-                <Row><Col><Button style={{marginTop:10}} onClick={()=>this.handleClick(dish.dish_id)}>Add To Cart</Button></Col></Row>
+                <Row style={{marginTop:10}}><Col>{dish.description}</Col></Row>
+                <Row style={{marginTop:2}}><Col>$$: {dish.dish_price}</Col></Row>
+                <Row style={{marginTop:2}}><Col>Ingredients: {dish.ingredients}</Col></Row>
+                <Row style={{marginTop:2}}><Col>Eat it for: {dish.dish_type}</Col></Row>
+                <Row style={{marginTop:2}}><Col>Quantity: <input type="number" id={dish.dish_id}/></Col></Row>
+                <Row style={{marginTop:2}}><Col><Button style={{marginTop:20, color:"white", backgroundColor:"#d32323"}} onClick={()=>this.handleClick(dish.dish_id)}>Add To Cart</Button></Col></Row>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -99,11 +100,11 @@ class biz extends Component {
 
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat'].map(day=>{
       return (
-        <Row>
-          <Col style={{marginTop:5, borderBottom:"1px solid black"}}>
+        <Table.Row>
+          <Table.Cell>
             {day}: {this.props.location.state.restaurant.timings}
-          </Col>
-        </Row>
+          </Table.Cell>
+        </Table.Row>
       )
     })
 
@@ -114,7 +115,7 @@ class biz extends Component {
         <div style={{border:"1px solid black", marginTop:20, height:"200px"}}>
           Images go here
         </div>
-        <div style={{border:"1px solid black", marginTop:10, height:"200px"}}>
+        <div style={{marginTop:10, height:"200px", borderBottom:"1px solid #eeeeef"}}>
           <Row>
             <Col style={{borderRight:"1px solid black"}}>
               <Row><Col><h1 style={{fontWeight:900, fontFamily:"Poppins,Helvetica Neue,Helvetica,Arial,sans-serif", marginLeft:50, color:"#2b273c", fontSize:"48px"}}>{this.props.location.state.restaurant.rest_name}</h1></Col></Row>
@@ -132,12 +133,12 @@ class biz extends Component {
                 {takeoutIcon}
                   Take-Out
                 </Col>
-              </Row>
-              <Row><Col><Button style={{marginTop:10, marginLeft:50}} onClick = {this.handleModal}>Add A Review</Button></Col></Row>
+              </Row>              
+              <Row><Col><Button style={{marginTop:10, marginLeft:50, color:"white", backgroundColor:"#d32323"}} onClick = {this.handleModal}>Add A Review</Button></Col></Row>
               <ReviewModal show={this.state.modalShow} onHide={()=>this.setState({modalShow:false})} rest_id={this.props.location.state.restaurant.rest_id}/>
             </Col>
-            <Col>              
-              
+            <Col>
+              <h4>Call: {this.props.location.state.restaurant.phone}</h4>
             </Col>
           </Row>
         </div>
@@ -146,19 +147,14 @@ class biz extends Component {
             <Col md={8} style={{marginTop:"20px"}}>
               {dishInfo}
             </Col>
-            <Col md={4} style={{borderLeft:"1px solid black", marginTop:"20px"}}>
-              <Row style={{borderBottom:"1px solid black"}}>
-                <Col>
-                <Row>
-                <Col>
-                  Call: {this.props.location.state.restaurant.phone}
-                </Col>
-              </Row>
-                </Col>
-              </Row>
+            <Col md={4} style={{marginTop:"20px"}}>              
               <Row>
                 <Col>
-                  {days}
+                  <Table striped style={{marginLeft:-10}} className="shadow p-3 mb-5 rounded">
+                    <Table.Body>
+                      {days}
+                    </Table.Body>
+                  </Table>
                 </Col>
               </Row>
             </Col>

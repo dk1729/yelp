@@ -4,9 +4,9 @@ import {Redirect} from 'react-router';
 import {connect} from 'react-redux';
 import InternalHeader from './InternalHeader';
 import {fetchUserData} from '../actions';
-import {Row,Col, Nav} from 'react-bootstrap';
+import { Row,Col, Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faTag, faCalendarWeek, faDollarSign, faCheckCircle, faBookmark, faLightbulb, faStar, faAward, faUser, faUserFriends, faCamera, faIdCard } from '@fortawesome/free-solid-svg-icons'
+import {faTag, faCalendarWeek,  faStar, faUserFriends, faCamera, faIdCard } from '@fortawesome/free-solid-svg-icons'
 
 class Profile extends Component {  
   componentDidMount(){        
@@ -103,23 +103,31 @@ class Profile extends Component {
             </Col>
             <Col>Useless Stuff</Col>
             <Col>
-              <div style={{marginLeft:10, marginTop:10, borderLeft:"1px solid #e6e6e6",width:"300px",height:"100px"}}>
+              <div style={{marginLeft:10, marginTop:10, borderLeft:"1px solid #e6e6e6",width:"300px",height:"150px"}}>
                 <Row>
                     <Col style={{marginLeft:10}}>
                       <span>
                         <p><h5 style={{fontWeight:"bold"}}>Location</h5></p>                        
-                        {this.props.formData.city}, {this.props.formData.state}
+                        {this.props.formData.city?this.props.formData.city+", ":"Update Location in profile"} {this.props.formData.state}
                       </span>
                     </Col>
                   </Row>              
                   <Row style={{marginTop:10}}>
                     <Col style={{marginLeft:10}}>
                       <span>
-                        <p><h5 style={{fontWeight:"bold"}}>Things I Love</h5></p>
-                        {this.props.formData.ilove}
+                        <p><h5 style={{fontWeight:"bold"}}>Yelping Since</h5></p>
+                        {this.props.formData.yelping_since}
                       </span>
                     </Col>
-                  </Row>                
+                  </Row>
+                  <Row style={{marginTop:10}}>
+                    <Col style={{marginLeft:10}}>
+                      <span>
+                        <p><h5 style={{fontWeight:"bold"}}>Things I Love</h5></p>
+                        {this.props.formData.ilove?this.props.formData.ilove:"You haven't told us yet...Do tell"}
+                      </span>
+                    </Col>
+                  </Row>
               </div>
             </Col>
           </Row>

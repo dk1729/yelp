@@ -214,7 +214,7 @@ export function fetchRestEvents(rest_id) {
 }
 
 export function fetchRegisteredEvents(id) {
-  console.log("Action called")
+  console.log("Action called")  
   return async (dispatch) => {
     Axios.defaults.withCredentials = true;
     const response = await Axios.get("http://localhost:3001/getRegisteredEvents/"+id)

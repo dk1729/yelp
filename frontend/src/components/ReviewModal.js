@@ -63,7 +63,7 @@ export default class ReviewModal extends Component {
           </Row>
           <Row style={{marginTop:10}}>
             <Col>
-              <Form.Field id='btn' control={Button} content='Submit Review' onClick={this.handleSubmit}/>
+              <Form.Field id='btn' style={{backgroundColor:"#d32323", color:"white"}} control={Button} content='Submit Review' onClick={this.handleSubmit}/>
             </Col>
           </Row>          
         </Form>        

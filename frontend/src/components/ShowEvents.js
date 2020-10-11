@@ -4,20 +4,20 @@ import {fetchEvents, fetchRegisteredEvents} from '../actions';
 import {connect} from 'react-redux';
 import {Form, Button, Card, Input } from 'semantic-ui-react';
 import axios from 'axios';
-import {Row,Col} from 'react-bootstrap';
+import {Row,Col, Toast} from 'react-bootstrap';
 import RegisteredEvents from './RegisteredEvents';
 
 class ShowEvents extends Component {
-  state = {searchTerm:"", cards:[], modalShow:false}
+  state = {searchTerm:"", cards:[], modalShow:false, message:"", show:false}
 
   handleModal = event => {
     event.preventDefault();
     this.setState({modalShow:true})
   }
 
-  componentDidMount(){        
-    this.props.fetchEvents();
+  componentDidMount(){
     this.props.fetchRegisteredEvents(window.localStorage.getItem('id'));
+    this.props.fetchEvents();
   }
 
   handleChange = event => {
@@ -53,18 +53,37 @@ class ShowEvents extends Component {
     axios.post('http://localhost:3001/registerForEvent',{user_id, event_id})
         .then(response => {
             console.log("Status Code : ",response.status);            
-
-        }).catch((err)=>{
-          console.log("ERRR : ",err)
+            if(response.status === 200){
+              this.setState({message:"Registered"})
+              this.setState({show:true})
+              setTimeout(()=>{
+                this.setState({show:false})
+              },1000)
+              window.location.reload(false)
+            }
+            else{
+              this.setState({message:"Already Registered"})
+              this.setState({show:true})
+              setTimeout(()=>{
+                this.setState({show:false})
+              },1000)
+            }
+        }).catch((err)=>{          
+          this.setState({message:"Already Registered"})
+          this.setState({show:true})
+          setTimeout(()=>{
+            this.setState({show:false})
+          },1000)
         });
   }
   render() {
     let event_cards = null;
-
+    console.log("registered events")
+    console.log(this.state.re)
     if(this.state.cards.length>0){
       event_cards = this.state.cards.map(event => {
         return (
-          <Card>
+          <Card className="shadow-sm p-3 mb-5 rounded">
             <Card.Content>
               <Card.Header>{event.event_name}</Card.Header>
               <Card.Meta>{event.event_hash}</Card.Meta>
@@ -93,7 +112,7 @@ class ShowEvents extends Component {
     else if(this.props.events.events.length!==undefined){
       event_cards = this.props.events.events.map(event => {
         return (
-          <Card>
+          <Card className="shadow-sm p-3 mb-5 rounded">
             <Card.Content>
               <Card.Header>{event.event_name}</Card.Header>
               <Card.Meta>{event.event_hash}</Card.Meta>
@@ -119,10 +138,13 @@ class ShowEvents extends Component {
         )        
       })
     }
-    return (
+    return (      
       <div>
         <InternalHeader/>
         <Row style={{marginTop:20}}>
+          <Toast onClose={() => this.setState({show:true})} show={this.state.show} style={{position: 'absolute',top: 120,right: 10}}autohide>
+            <Toast.Header>{this.state.message}</Toast.Header>
+          </Toast>
           <Col md={2}>
             <Row>
               <Col>

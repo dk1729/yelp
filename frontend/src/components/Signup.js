@@ -7,23 +7,6 @@ import {Link} from 'react-router-dom';
 import {signUpSuccess, signUpFail} from '../actions';
 import {connect} from 'react-redux';
 import {Redirect} from 'react-router';
-const options_months = [];
-
-let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-for(let i=0;i<months.length;i++){
-  options_months.push(<option value={months[i]}>{months[i]}</option>)
-}
-
-const options_years = [];
-for(let i=2020;i>=1901;i--){
-  options_years.push(<option value={i}>{i}</option>)
-}
-
-const options_days = [];
-
-for(let i=1;i<=31;i++){
-  options_days.push(<option value={i}>{i}</option>)
-}
 
 class Signup extends React.Component{
   renderInput({input, label, type}){
@@ -35,16 +18,16 @@ class Signup extends React.Component{
   }
 
   onSubmit = formValues => {
-    console.log(formValues)    
-
     axios.defaults.withCredentials = true;
-        //make a post request with the user data
     axios.post('http://localhost:3001/signup',formValues)
         .then(response => {
-            console.log("Status Code : ",response.status);
-            this.props.signUpSuccess();
+            if(response.status === 200){
+              this.props.signUpSuccess();
+            }
+            else{
+              this.props.signUpFail();
+            }
         }).catch(()=>{
-          console.log("ERRR")
           this.props.signUpFail();
         });
   }    
@@ -52,7 +35,6 @@ class Signup extends React.Component{
   
   render(){
     let redirectVar = null;
-    {console.log(window.localStorage.getItem('isSignedIn'))}
     if(window.localStorage.getItem('isSignedIn')){
         redirectVar = <Redirect to="/profile" />
     }

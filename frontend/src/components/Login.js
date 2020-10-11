@@ -8,38 +8,36 @@ import {Redirect} from 'react-router';
 import {Link} from 'react-router-dom';
 
 class Login extends React.Component{
-  renderInput({input, label, type, meta:{touched, error}}){
+  state = {loginFailed:false}
+  renderInput({input, label, type}){
     return (
       <div className="field">
         <input {...input} placeholder={label} type={type}/>
-        {touched && error && <span>error</span>}
       </div>
     );
   }
 
   onSubmit = formValues =>{
-    console.log(formValues)
-
     axios.defaults.withCredentials = true;
     axios.post('http://localhost:3001/login',formValues)
         .then(response => {
-            console.log("Status Code : ",response.status);
-            console.log(response)            
             if(response.status === 200){
               window.localStorage.setItem('isSignedIn',true);
               window.localStorage.setItem('id',response.data.id);
               this.props.signIn();
-              this.props.setID(response.data.id);      
-            }            
+              this.props.setID(response.data.id);
+              this.setState({loginFailed:false})
+            }
+            else{
+              this.setState({loginFailed:true})
+            }
         }).catch(()=>{
-          console.log("ERRR")
           window.localStorage.setItem('isSignedIn',this.props.isSignedIn);
         });
   }
 
   render(){
     let redirectVar = null;
-    {console.log(window.localStorage.getItem('isSignedIn'))}
     if(window.localStorage.getItem('isSignedIn')){
         redirectVar = <Redirect to="/profile" />
     }
@@ -59,7 +57,7 @@ class Login extends React.Component{
                           <h2>Sign Up for Yelp</h2>
                           <p className="subheading">Connect with great local businesses</p>
                         </div>
-                        {this.props.isSignedIn === false && <div className="alert alert-danger">
+                        {this.state.loginFailed && <div className="alert alert-danger">
                           Login failed
                         </div>}                        
                         <div>

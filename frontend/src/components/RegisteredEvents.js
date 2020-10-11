@@ -3,10 +3,8 @@ import {Modal} from 'react-bootstrap';
 import { Segment } from 'semantic-ui-react'
 
 class RegisteredEvents extends Component {
-
   render() {
-    console.log("OK, props = ")
-    console.log(this.props)
+    console.log("Rendered")
 
     let segments = null;
 

@@ -100,7 +100,7 @@ class restaurants extends Component {
         markerInfo.push({rest_name:restaurant.rest_name, latitude:restaurant.latitude, longitude:restaurant.longitude})
         return(
           <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
-            <Card bg="light" style={{width:"700px",marginLeft:50, marginTop:20, height:"200px"}}>
+            <Card bg="white" className="shadow p-3 mb-5 rounded" style={{color:"black", width:"600px",marginLeft:20, marginTop:15, height:"200px"}}>
               <Card.Body>
                 <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
                 <Card.Text style={{marginLeft:"30%"}}>
@@ -122,7 +122,7 @@ class restaurants extends Component {
         markerInfo.push({rest_name:restaurant.rest_name, latitude:restaurant.latitude, longitude:restaurant.longitude})
         return (
           <Link to={{pathname:"/biz", state:{restaurant}}} style={{textDecoration:"none"}}>
-            <Card bg="light" style={{width:"600px",marginLeft:20, marginTop:20, height:"200px"}}>
+            <Card bg="white" className="shadow p-3 mb-5 rounded" style={{color:"black", width:"600px",marginLeft:20, marginTop:15, height:"200px"}}>
               <Card.Body>
                 <Card.Title style={{marginLeft:"30%"}}>{restaurant.rest_name}</Card.Title>
                 <Card.Text style={{marginLeft:"30%"}}>
@@ -148,28 +148,28 @@ class restaurants extends Component {
       <div>
         {redirectVar}
         <InternalHeader/>
-        <Row style = {{marginLeft : "2%", marginTop:17}}>
-          <Col md={2}>
-            <Row><Col><div style={{marginTop:10, marginLeft:20}}>Filter</div></Col></Row>
+        <Row>
+          <Col md={2} className="shadow p-3 mb-5 rounded">
+            <Row><Col><div style={{marginTop:10, marginLeft:20}}><h4>Filter</h4></div></Col></Row>
             <Row>
               <Col>
-              <div style={{marginTop:10, marginLeft:20}}>Delivery methods</div>
+              <div style={{marginTop:10, marginLeft:20, position:"sticky"}}><h5>Delivery Methods</h5></div>
                 <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
                   <Field name="takeout" component={this.renderInput} type="checkbox" label="Takeout"></Field>
                   <Field name="delivery" component={this.renderInput} type="checkbox" label="Delivery"></Field>
                   <Field name="dineout" component={this.renderInput} type="checkbox" label="Dine-out"></Field>                                   
-                  <div style={{marginTop:10, marginLeft:20}}>Neighbourhoods</div>       
+                  <div style={{marginTop:10, marginLeft:20}}><h5>Neighbourhoods</h5></div>       
                     {hoodFilter}
-                  <button className="ui button primary" style={{marginTop:20}}>Apply filters</button>
+                  <button className="ui button primary shadow p-3 mb-5 rounded" style={{marginTop:20, marginLeft:20, backgroundColor:"#d32323"}}>Apply filters</button>
                 </form>
               </Col>
             </Row>
           </Col>
-          <Col style={{borderLeft:"1px solid black", borderRight:"1px solid black"}} md={6}>
+          <Col md={6}>
             {restInfo}
           </Col>
-          <Col md={4} style={{height:600, marginLeft:-14}}>
-            <Maps coords={markerInfo}></Maps>
+          <Col md={4} style={{height:1000, marginLeft:-14, position:"sticky"}}>            
+            <Maps coords={markerInfo}></Maps>            
           </Col>
         </Row>
       </div>

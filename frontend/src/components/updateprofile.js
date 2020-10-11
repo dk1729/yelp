@@ -8,7 +8,8 @@ import InternalHeader from './InternalHeader';
 import {Row,Nav,Col} from 'react-bootstrap';
 
 var redirectVar = null;;
-class updateprofile extends Component {  
+class updateprofile extends Component {
+  state = {updateSuccess:false}
   componentDidMount(){    
     this.props.fetchUserData(window.localStorage.getItem('id'));
     
@@ -38,6 +39,9 @@ class updateprofile extends Component {
         axios.post('http://localhost:3001/update',{...formValues, latitude:response.data.results[0].geometry.location.lat, longitude:response.data.results[0].geometry.location.lng})
             .then(response => {
                 console.log("Status Code : ",response.status);
+                if(response.status === 200){
+                  this.setState({updateSuccess:true})
+                }
             }).catch((err)=>{
               console.log("ERRR : ",err)
             });
@@ -47,7 +51,8 @@ class updateprofile extends Component {
       axios.defaults.withCredentials = true;
       axios.post('http://localhost:3001/update',formValues)
           .then(response => {
-              console.log("Status Code : ",response.status);
+            console.log("Status Code : ",response.status);
+            this.setState({updateSuccess:true})
           }).catch((err)=>{
             console.log("ERRR : ",err)
           });
@@ -109,6 +114,9 @@ class updateprofile extends Component {
                 </Nav>
               </Col>                
               <Col md={9}>
+              {this.state.updateSuccess && <div className="alert alert-success" style={{width:"500px"}}>
+                          Profile Updated
+                        </div>}
               <form className="ui form" onSubmit={this.props.handleSubmit(this.onSubmit)}>
                 <Field placeholder={this.props.formData.first_name} name="first_name"  component={this.renderInput} label="First Name" type="text"/>
                 <Field placeholder={this.props.formData.last_name} name="last_name" component={this.renderInput} label="Last Name" type="text"/>
@@ -157,7 +165,7 @@ class updateprofile extends Component {
                 <Field placeholder={this.props.formData.dontell} name="dontell" component={this.renderInput} label="Don't Tell Anyone Else But..." type="text"/>
                 <Field placeholder={this.props.formData.discovery} name="discovery" component={this.renderInput} label="Most Recent Discovery" type="text"/>
                 <Field placeholder={this.props.formData.crush} name="crush" component={this.renderInput} label="Current Crush" type="text"/>
-                <button className="ui button primary">Submit</button>
+                <button className="ui button primary" style={{backgroundColor:"#d32323"}}>Submit</button>
               </form>
               </Col>          
           </Row>
